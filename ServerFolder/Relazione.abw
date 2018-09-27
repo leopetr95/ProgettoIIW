@@ -1,0 +1,1752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE abiword PUBLIC "-//ABISOURCE//DTD AWML 1.0 Strict//EN" "http://www.abisource.com/awml.dtd">
+<abiword template="false" xmlns:ct="http://www.abisource.com/changetracking.dtd" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:math="http://www.w3.org/1998/Math/MathML" xid-max="719" xmlns:dc="http://purl.org/dc/elements/1.1/" styles="unlocked" fileformat="1.1" xmlns:svg="http://www.w3.org/2000/svg" xmlns:awml="http://www.abisource.com/awml.dtd" xmlns="http://www.abisource.com/awml.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.9.1" xml:space="preserve" props="dom-dir:ltr; document-footnote-restart-section:0; document-endnote-type:numeric; document-endnote-place-enddoc:1; document-endnote-initial:1; lang:it-IT; document-endnote-restart-section:0; document-footnote-restart-page:0; document-footnote-type:numeric; document-footnote-initial:1; document-endnote-place-endsection:0">
+<!-- ======================================================================== -->
+<!-- This file is an AbiWord document.                                        -->
+<!-- AbiWord is a free, Open Source word processor.                           -->
+<!-- More information about AbiWord is available at http://www.abisource.com/ -->
+<!-- You should not edit this file by hand.                                   -->
+<!-- ======================================================================== -->
+
+<metadata>
+<m key="abiword.date_last_changed">Sun Sep 17 20:40:41 2017
+</m>
+<m key="abiword.generator">AbiWord</m>
+<m key="dc.creator">Claudio</m>
+<m key="dc.date">Thu Sep 14 16:10:28 2017
+</m>
+<m key="dc.format">application/x-abiword</m>
+</metadata>
+<rdf>
+</rdf>
+<history version="8" edit-time="191622" last-saved="1505673641" uid="f9f13690-992a-11e7-94f3-c15aeadb7669">
+<version id="1" started="1505398228" uid="76412c48-9956-11e7-94f3-c15aeadb7669" auto="0" top-xid="82"/>
+<version id="2" started="1505464778" uid="691f10fc-99f1-11e7-8660-c14bd1c04af4" auto="0" top-xid="91"/>
+<version id="3" started="1505552194" uid="f0ce7c9c-9abc-11e7-9ed6-9c5acdd19683" auto="0" top-xid="131"/>
+<version id="8" started="1505583221" uid="b528f2fa-9bd7-11e7-851f-fee82b2dc644" auto="0" top-xid="561"/>
+</history>
+<styles>
+<s type="P" name="Normal" followedby="Current Settings" props="font-weight:normal; font-family:Times New Roman; margin-top:0pt; color:000000; margin-left:0pt; text-align:left; widows:2; font-style:normal; text-indent:0in; text-position:normal; font-variant:normal; bgcolor:transparent; line-height:1.0; text-decoration:none; margin-bottom:0pt; margin-right:0pt; font-size:12pt; font-stretch:normal"/>
+</styles>
+<pagesize pagetype="A4" orientation="portrait" width="8.267717" height="11.692913" units="in" page-scale="1.000000"/>
+<section xid="7" props="page-margin-footer:0.5000in; page-margin-header:0.5000in; page-margin-right:1.0000in; page-margin-left:1.0000in; page-margin-top:1.0000in; page-margin-bottom:1.0000in">
+<p style="Normal" xid="8" props="text-align:center"><c props="font-weight:bold; font-size:19pt">RELAZIONE</c><c props="font-weight:bold; font-size:18pt"></c></p>
+<p style="Normal" xid="6" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="126" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c props="font-size:14pt"></c></p>
+<p style="Normal" xid="107" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c props="font-size:14pt"></c></p>
+<p style="Normal" xid="108" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c props="font-weight:normal; font-size:14pt">Il progetto si propone di realizzare il trasferimento di file attraverso la rete implementando servizi di comunicazione affidabile tra più client e un server, utilizzando il protocollo del livello di trasporto UDP, che è invece un servizio di tipo «best-effort», che non garantisce né il corretto invio dei dati, né che essi arrivino in ordine. Come da specifiche, i comandi realizzati sono quelli di put, get, e list. Viene mostrata inanzitutto la struttura del progetto, con i file da cui è composto, e l'architettura scelta per client e server. Dopodiché, viene spiegata l'implementazione delle strutture dati e delle funzioni utilizzate per la realizzazione del progetto. Infine, vi sono alcuni dati misurati riguardo il trasferimento di file, al variare di dimensione, finestra e probabilità di perdita, analizzati con timer dei pacchetti fisso e variabile.</c></p>
+<p style="Normal" xid="11" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="12" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="13" props="text-align:center"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="96" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="97" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="582" props="text-align:center"><c></c></p>
+<p style="Normal" xid="98" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="99" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="100" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="14" props="text-align:center"><c props="font-weight:bold; font-size:16pt">STRUTTURA DEL PROGETTO</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="109" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="110" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="17" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="18" props="text-align:left"><c props="font-weight:normal; font-size:14pt">All'interno del progetto vi è il file server_udp.c che contiene il codice sorgente del server, e il file client_udp.c contente invece il codice sorgente del client.</c><c props="font-weight:normal; font-size:14pt"></c><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:14pt; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT"> Il server può essere avviato una volta sola, mentre possono essere avviati più client contemporaneamente. </c><c props="font-weight:normal; font-size:14pt"> Client e server utilizzano molte librerie comuni, che contengono tutte le funzioni utilizzate da entrambi e le macro che sono necessarie per la realizzazione della comunicazione. Vi è un file chiamato «configurations.h», in cui sono contenute le macro configurabili relative alla dimensione della finestra, alla probabilità di perdita dei pacchetti e nella scelta del timer, se questo deve essere adattativo o meno. Vi sono poi, nel file basic.h, le inclusioni delle librerie che sono utilizzate da entrambi(stdio, stdlib,unistd ecc.), e alcune costanti come il numero di porta del server, espresso con la macro SERVPORT con valore 5194, e la quantità di dati massima che può essere inserita all'interno di un pacchetto, espressa con la macro MAXLINE e con valore 1460. È stato scelto questo valore perché esso corrisponde alla dimensione massima del corpo dati che viene utilizzata dal protocollo del livello di trasporto TCP, che garantisce comunicazione affidabile. Dimensione della finestra, probabilità di perdita dei pacchetti e impostazioni riguardo il timer devono essere uguali per client e server, perciò è necessario che siano contenute in una libreria comune ad entrambi. Vi è poi l'header file common.h, e il relativo file common.c, contenente operazioni di base anch'esse comuni sia a client che a server, come ad esempio la lettura o la scrittura su file. Vi sono molte altre funzioni in comune, come quelle relative alla finestra, all'invio e alla ricezione dei pacchetti, ai timer, e alla gestione dei thread, che sono contenute in file specifici: è stato scelto infatti di separare queste dalle funzioni di base. Nel file window_operations.h(e nel relativo file window_operations.c) vi sono le operazioni riguardanti la finestra di invio e ricezione; in packet_functions.h, quelle relative all'invio e alla ricezione dei pacchetti; nel file thread_functions.h, vi sono le funzioni relative alla sincronizzazione tra il thread di invio e ricezione e quello che si occupa delle ritrasmissioni; nel file timer_functions, vi sono le funzioni relative all'implementazione e alla gestione dei timer. Lo scopo di queste funzioni verrà spiegato nei paragrafi successivi. Vi è poi un file contenente tutte le strutture dati che vengono utilizzate da client e server; in particolare, vi sono la struttura dati che implementa la finestra, chiamata Window, e quella che implementa invece il pacchetto, chiamata Header. Sono contenute anche delle strutture dati che verranno spiegate meglio in seguito, che sono necessarie al server per poter svolgere i propri compiti, come la struttura dati chiamata Process_data e la coda di messaggi. </c></p>
+<p style="Normal" xid="38" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="31" props="text-align:center"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="92" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="93" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="562" props="text-align:center"><c></c></p>
+<p style="Normal" xid="94" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="95" props="text-align:center"><c></c><c></c></p>
+<p style="Normal" xid="565" props="text-align:center"><c></c></p>
+<p style="Normal" xid="566" props="text-align:center"><c></c></p>
+<p style="Normal" xid="39" props="text-align:center"><c props="font-weight:bold; font-size:16pt">INSTAURAZIONE DELLA CONNESSIONE</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="111" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="112" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="113" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="41" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="42" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Il protocollo del livello di trasporto UDP è «connectionless», perciò quando si utilizza questo servizio, i dati vengono inviati senza che vi sia un preventivo scambio di messaggi volto ad instaurare una connessione tra trasmettitore e ricevitore. Perciò, nel progetto, è stata implementata a livello applicativo: quando un client viene avviato, viene richiesto di immettere un comando, stampando un messaggio sullo standard output, e questo deve essere uno tra put, get e list. Una volta che l'utente inserisce il comando, se questo non corrisponde a nessuno di quei tre comandi viene mostrato un messaggio di errore; altrimenti, il client effettua una richiesta, inviando un pacchetto al server, identificato da un numero generato casualmente, lasciando vuoto il campo dati, che è invece identificato da un vettore di char di grandezza MAXLINE: questo verrà interpretato dal server come una richiesta di connessione. Per inviare la richiesta e i successivi pacchetti, il client utilizza una struttura dati che implementa il pacchetto, chiamata Header, utilizzando un campo di questa chiamato n_seq,identificato da un intero, in cui il client inserirà il numero che ha generato casualmente. Il numero di sequenza è compreso tra 1 e 1000. Il server risponderà inviando un pacchetto, inserendo nel campo n_ack contenuto in questa struttura dati, che è anch'esso un intero, lo stesso numero di sequenza ricevuto dall'utente e lasciando sempre il campo dati vuoto. A quel punto, la connessione è stabilita, e si potrà procedere all'esecuzione del comando vero e proprio.</c><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="47" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="43" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="44" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="49" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="50" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="567" props="text-align:left"><c></c></p>
+<p style="Normal" xid="568" props="text-align:left"></p>
+<p style="Normal" xid="51" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="45" props="text-align:center"><c props="font-weight:bold; font-size:16pt">STRUTTURA DEL SERVER</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="114" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="115" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="46" props="text-align:center"><c props="font-weight:normal; font-size:12pt"></c><c props="font-weight:normal; font-size:12pt">		</c></p>
+<p style="Normal" xid="52" props="font-family:Monospace; font-size:10pt; text-decoration:none; font-weight:normal; text-position:normal; text-align:left; font-style:normal"><c props="font-weight:normal; font-family:Times New Roman; font-size:14pt">Il server deve essere in grado soddisfare più richieste contemporaneamente, sia nel caso vi siano più client connessi insieme, sia nel caso un client richieda più comandi insieme; per permettere ciò, si è scelta un'architettura multiprocesso utilizzando</c><c props="font-weight:normal; font-size:14pt"> </c><c props="font-weight:normal; font-family:Times New Roman; font-size:14pt">una prefork, in cui vi è un processo padre che non gestisce direttamente le richieste, ma le delega ai propri processi figli non appena ne riceve una. La scelta è ricaduta su un'architettura multiprocesso piuttosto che multithread poiché in questo modo ogni richiesta servita dal server è totalmente separata dalle altre. Quindi, vi è un primo processo, che, quando viene avviato, crea una socket, tramite l'API socket(), che utilizzerà per ascoltare le richieste dei client, e ad assegna a questa un indirizzo locale, tramite l'API bind(). Prima ancora di mettersi in ascolto sulla socket, il processo server avviato crea 10 processi figli, ai quali delegherà la gestione dei client. Per fare ciò è necessario quindi che il padre comunichi con essi: vengono utilizzate a questo scopo una coda di messaggi e una regione di memoria condivisa. La coda di messaggi viene creata dal server nella propria directory, utilizzando la funzione ftok con chiave 'b'; questa contiene,oltre al campo mtype, rappresentato da un long, un intero, e una struttura dati chiamata sockaddr_in; questi due campi sono necessari per l'esecuzione della richiesta. Infatti, quando il processo padre riceverà una richiesta dal client, scriverà all'interno della coda le informazioni relative a chi lo ha contattato, come l'indirizzo IP e la porta del client. Il padre è quindi sempre in ascolto sulla socket creata all'avvio, e la ricezione delle richieste avviene tramite l'utilizzo della recvfrom; questa, tra gli argomenti che le devono essere passati, contiene appunto un puntatore alla struttura dati chiamata sockaddr_in; se questo puntatore è diverso da NULL, quando viene ricevuto un pacchetto, verranno riemepiti i suoi campi con le informazioni necessarie per poter rispondere al client, come il numero di porta del client, il protocollo utilizzato, e l'indirizzo IP. È per questo motivo che la coda di messaggi contiene un campo con una struttura dati sockaddr_in; il campo intero, invece, verrà riempito con il numero di sequenza iniziale scelto dall'utente. Una volta scritto ciò all'interno della coda di messaggi, il processo padre si rimetterà in ascolto sulla socket, mentre i processi figli, proveranno a leggere dalla coda: il primo processo che ci riuscirà servirà le richiesta del client; sarà lui ad inviare l'ack al client, instaurando quindi la connessione. Il processo padre, tuttavia, si occupa anche di tenere traccia del numero di processi disponibili, ed eventualmente di crearne altri. Per effettuare ciò, sempre all'avvio il processo padre crea una regione di memoria condivisa, sempre nella propria directory e con chiave 'a', contenente una struttura dati chiamata Process_data. In questa, è contenuto un intero chiamato n_avail, che tiene appunto traccia di quanti processi sono disponibili, e un semaforo. All'avvio, il numero di processi disponibili è settato a 10, poiché il padre crea 10 processi; quando un processo serve una richiesta, prende il semaforo e decrementa questa variabile; dopodiché, una volta terminata la richiesta, riprende il semaforo e incrementa la variabile. Ogni processo figlio può servire al massimo 5 richieste, dopodiché termina, decrementando nuovamente la variabile. Con questo meccanismo, il padre non si preoccupa di andare a verificare quali processi sono disponibili e a chi può inoltrare la richiesta; sarà il primo figlio che riuscirà a leggere dalla coda a gestire tutto. Quando un figlio terminerà, invierà il segnale SIGHCLD al padre, diventando zombie. Il padre, quindi, gestisce questo segnale con un handler: viene effettuata una wait con opzione WNOHANG, che indica al padre di ritornare se non è morto nessun figlio. In questo modo, si evita di appesantire il sistema con i processi zombie. Ogni volta che il processo padre inoltra una richiesta ai figli, va a controllare il numero di processi disponibili: se questi sono meno di 5, ne va a creare altri 5; in questo modo, si avranno sempre almeno 10 processi disponibili per soddisfare le richieste.</c></p>
+<p style="Normal" xid="116" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="570" props="text-align:left"><c></c></p>
+<p style="Normal" xid="571" props="text-align:left"><c></c></p>
+<p style="Normal" xid="572" props="text-align:left"><c></c></p>
+<p style="Normal" xid="117" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="53" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="54" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="584" props="text-align:left"><c></c></p>
+<p style="Normal" xid="585" props="text-align:left"><c></c></p>
+<p style="Normal" xid="56" props="text-align:center"><c props="font-weight:bold; font-size:16pt">STRUTTURA DEL CLIENT</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="573" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="583" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="574" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="118" props="font-family:Times New Roman; font-size:12pt; lang:it-IT; font-weight:normal; text-position:normal; text-align:left; font-style:normal; text-decoration:none"><c props="font-weight:normal; font-size:14pt">Anche per il client si è scelta un'architettura multiprocesso. Il client, infatti, è di tipo concorrente, e può quindi effettuare più richieste in parallelo. Anche in questo caso, si è scelta questa architettura piuttosto che una multithread, perché questo permette a ciascuna richiesta di essere totalmente indipendente dalle altre. Il client può effetturare fino ad un massimo di 5 richieste in parallelo: è stato scelto questo numero poiché un numero maggiore avrebbe appesantito troppo il sistema; infatti, come detto in precedenza, il server inizialmente crea 10 processi che attendono su una coda di messaggi e ne crea di nuovi se questi sono meno di 5. Aumentare il numero di processi creati inizialmente dal server sarebbe costoso, poiché in caso non arrivino richieste, si sprecherebbe memoria per dei processi che non stanno servendo alcuna richiesta. Lasciando il numero iniziale di processi a 10, se il client potesse effettuare più di 5 richieste insieme, il server passerebbe molto tempo a creare nuovi processi invece che ad ascoltare le richieste, e anche questo rallenterebbe molto il sistema. Anche per il client, come era per il server, vi è un primo processo principale che si occupa di leggere dallo standard input i comandi, ma non si preoccupa di effettuarne l'invio: questo compito verrà svolto ogni volta da un processo figlio. Infatti, quando viene immesso un comando, nel caso in cui questo corrisponda a put/get/list, verrà creato un nuovo processo che si preoccuperà di comunicare con il server. </c><c props="font-weight:normal; font-size:14pt"></c><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:14pt; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT">Il processo padre si metterà invece nuovamente in attesa sullo standard input per ricevere nuovi comandi da parte dell'utente. Per tenere traccia del numero di richieste effettuate dall'utente, il padre utilizza</c><c props="font-weight:normal; font-size:14pt"> una variabile globale, chiamata n_request, che all'inizio vale 0. Ogni volta che il client legge nuovi comandi dallo standard input, il processo padre incrementa questa variabile. Quando invece una richiesta termina, il padre riceverà il segnale SIGCHLD, generato dalla morte di uno dei processi figli. Questo segnale è gestito da un handler, che permette due principali operazioni: come per il server, la gestione di questo segnale evita che il sistema si riempia di processi zombie; inoltre, ogni volta che viene ricevuto questo segnale, l'handler decrementa la variabile n_request, indicando quindi che è terminata la richiesta del client. Se vengono effettuate più di 5 richieste in parallelo, verrà mostrato in standard output un messaggio di errore all'utente, in cui viene indicato che è stato raggiunto il numero massimo di richieste che può effettuare; non verrà quindi creato alcun processo figlio. Quando sopraggiunge la fine dello standard input(quindi se l'utente digita CTRL + D da tastiera), il processo padre aspetterà la morte di tutti i figli, effettuando una wait con argomento NULL, per attendere la fine di tutte le operazioni in corso, dopodiché terminerà mostrando un messaggio che indica che tutte le richieste sono temrinate. Per quanto riguarda la comunicazione con il server, quando un processo figlio effettua una richiesta, genera un numero casuale ed invia un messaggio al server. Dopodiché, si mette in attesa della ricezione dell'ack da parte del server. Una volta arrivato, verrà mostrato un messaggio di conferma. Nel caso il messaggio di richiesta o l'ack vengano persi, il client proverà a rimandare la richiesta per 3 volte. Per fare ciò, viene impostato un timer per il tempo massimo che attenderà il client.</c><c props="font-family:Times New Roman; font-size:14pt; color:000000; text-decoration:none; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT"> I</c><c props="font-weight:normal; font-size:14pt">nizialmente, questo timer viene settato a 2 secondi. Se non viene ricevuta risposta, viene raddoppiato. Tutto questo andrà avanti fino ad un massimo di 3 tentativi: dopodiché, se ancora non si è ricevuta risposta, il processo termina mostrando un messaggio che indica che il server non è disponibile. </c></p>
+<p style="Normal" xid="36" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="20" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="119" props="text-align:left"><c></c><c></c></p>
+<p style="Normal" xid="21" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="586" props="text-align:left"><c></c></p>
+<p style="Normal" xid="587" props="text-align:left"><c></c></p>
+<p style="Normal" xid="22" props="text-align:center"><c props="font-weight:bold; font-size:16pt">CHIUSURA DELLA CONNESSIONE</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="575" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="120" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="59" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="58" props="text-align:left"><c props="font-weight:normal; font-size:14pt">La durata della connessione è relativa alla singola richiesta: terminata questa, il client dovrà creare un nuovo processo e ristabilire una connessione per poter effettuare un'altra richiesta. In questo modo si evita che un processo client monopolizzi un processo server, ed inoltre questo permette anche di redistribuire il carico di lavoro equamente ai vari processi del server. Perciò, il processo padre del client non instaurerà nessuna connessione con il server, e quando termina lo standard input può terminare senza dover inviare alcun messaggio al server. Saranno invece i figli, al termine di ogni richiesta, a chiudere la connessione. Nel caso di una get o una list, il client si comporta da ricevitore e il server da trasmettitore, mentre nel caso di una put sarà il server ad essere ricevitore e il client sarà il trasmettitore. Nel primo caso, una volta inviati tutti i pacchetti del file e ricevuti tutti gli ack, il server invierà un pacchetto di fine connessione, ed attenderà di ricevere l'ack del client. Tuttavia, sia il messaggio di fine connessione che l'ack potrebbero perdersi: nel caso avvenga ciò, il server effettuerà un massimo di 10 tentativi di ritrasmissione, e se continuerà a non ricevere l'ack terminerà indicando che il client non ha risposto. Per la put, i ruoli sono invertiti: il client è il trasmettitore e il server è il ricevitore: perciò il client invia i pacchetti del file e riceve gli ack,  e una volta ricevuti tutti, sarà lui a preoccuparsi di inoltrare il messaggio di fine connessione. Se viene perso questo messaggio o il relativo ack, il client terminerà indicando che il file è stato trasferito, ma il server sta avendo problemi. Quindi, è sempre il trasmettitore a chiudere la connessione. Sia nel caso di una get/list che nel caso di una put, viene salvata in una variabile intera, chiama end_seq, il numero di sequenza che avrà il pacchetto di chiusura della connessione: questo sarà uguale al numero di sequenza dell'ultimo pacchetto del file inviato più 1. Sia ricevitore che trasmettitore, come verrà spiegato nella sezione relativa ai comandi, sono a conoscenza della lunghezza del file, e perciò del relativo numero di pacchetti necessari per la trasmissione: quindi, chi riceve terrà conto del numero di pacchetti ricevuti e potrà capire quando è stato ricevuto tutto il file, e se il pacchetto ricevuto è quello relativo alla chiusura della connessione.</c></p>
+<p style="Normal" xid="563" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="24" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="25" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="564" props="text-align:left"><c></c></p>
+<p style="Normal" xid="26" props="text-align:center"><c props="font-weight:normal; font-size:12pt">		</c><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="576" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="577" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="578" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c><c props="font-weight:bold; font-size:16pt">IMPLEMENTAZIONE DELLA FINESTRA</c></p>
+<p style="Normal" xid="60" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="579" props="text-align:center"><c></c></p>
+<p style="Normal" xid="580" props="text-align:center"><c></c></p>
+<p style="Normal" xid="581" props="text-align:center"><c></c></p>
+<p style="Normal" xid="61" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="27" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Ad eccezione del messaggio di richiesta e di fine connessione, tutti i pacchetti vengono inviati tramite la finestra, implementata con la struttura dati Window. Questa contiene al proprio interno un puntatore ad una struttura dati chiamata Header, che implementa il pacchetto: a seconda della dimensione della finestra scelta, verrà allocato lo spazio richiesto. L</c><c props="font-weight:normal; font-size:14pt"></c><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:14pt; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT">a finestra è organizzata come un buffer circolare:</c><c props="font-weight:normal; font-size:14pt"> i pacchetti verranno inseriti a partire dalla prima posizione e, una volta arrivati all'ultima, i successivi ricominceranno ad essere inseriti nuovamente dalla prima. Il suo utilizzo è differente a seconda se si sta trasmettendo o ricevendo: nel primo caso, infatti, i pacchetti saranno inseriti per poi essere trasmessi, mentre nel secondo caso verranno bufferizzati per poi essere salvati su file o scritti in standard output quando opportuno. All'interno della struttura dati della finestra, vi sono due interi, chiamati S ed E: il primo contiene il valore dell'indice della finestra in cui si trova il pacchetto trasmesso meno di recente per cui si sta aspettando l'ack, mentre la seconda contiene l'indice della prima posizione libera del buffer, in cui potrà quindi essere inserito il prossimo pacchetto. Prima di iniziare a ricevere e a trasmettere, i valori di S ed E coincideranno e saranno uguali a 0. Quando viene inserito un pacchetto, il valore di E aumenta, e lo stesso avviene per la variabile S quando viene ricevuto il corrispondente ack. Infine, la finestra contiene un mutex ed una variabile intera, chiamata end, che servono a sincronizzare il thread dedicato alla trasmissione e alla ricezione dei pacchetti con quello che si occupa invece della ritrasmissione dei pacchetti scaduti, come sarà spiegato successivamente. La dimensione minima della finestra è ovviamente 1, mentre la dimensione massima consentita è 93: infatti, come osservato da vari test, una dimensione maggiore porta a saturare il buffer di UDP e quindi a perdere pacchetti; questo causa quindi un rallentamento della velocità di trasmissione di pacchetti. Se nel file di configurazione, indicato alla fine della relazione, viene inserito un numero minore di 0 per la dimensione della finestra, questa verrà settata di default a 80, mentre se viene inserito un numero maggiore di 93 verrà settata a 93. Nel pacchetto sono contenuti i seguenti campi: due interi, uno che rappresenta il numero di sequenza del pacchetto e l'altro il numero di ack; un campo dati, rappresentato da un vettore di char, di dimensione massima 1460 byte; una struttura dati timespec, utilizzata per memorizzare l'istante di invio del pacchetto: nel paragrafo relativo ai timer verrà spiegato bene il suo utilizzo. Poi, vi è un ulteriore intero, chiamato flag, che è utilizzato in maniera differente a seconda se la finestra è utilizzata per ricevere o per inviare: nel primo caso, questo flag viene settato a -2, per indicare che il pacchetto è vuoto e possono quindi essere inseriti dati; una volta riempito, viene settato a 0, e dopo essere stato inviato viene posto il flag a 1. Quando viene ricevuto un ack, il flag del corrispondente pacchetto viene settato a 2, indicando che è stato ricevuto il riscontro. In ricezione, invece, il flag di un pacchetto viene settato a 1 quando si vuole indicare che il pacchetto è vuoto e possono quindi essere inseriti nuovi dati, mentre viene post a 0 per indicare che è occupato. Per quanto riguarda la trasmissione, la finestra viene allocata con dimensione uguale a quella contenuta all'interno del file di configurazione più 1. Il motivo di questo è dovuto alla struttura del buffer circolare: infatti, senza alcun accorgimento vi sarebbe ambiguità tra la situazione in cui la finestra è piena e quando è vuota. Quando è vuota, la variabile S coincide con la variabile E; tuttavia, ogni volta che vengono inseriti nuovi pacchetti, la variabile E viene incrementata: senza alcun accorgimento, questa andrebbe a coincidere nuovamente con S, e non sarebbe possibile distinguere la situazione in cui la finestra è piena o vuota. Per evitare ciò, ogni volta viene memorizzato in una variabile intera, chiamata nE, il valore dell'indice che si otterrebbe incrementando E: se questo valore è uguale a quello di S, vuol dire che la finestra è piena, e non vengono inseriti nuovi pacchetti. Quindi la finestra non verrà mai riempita completamente, ma avrà sempre uno spazio libero. Perciò, se si vuole avere quindi una dimensione pari ad un n generico, bisognerò allocare la finestra con dimensione n+1. I numeri di sequenza dei pacchetti sono progressivi: una volta generato un numero casuale per il pacchetto di comando, il successivo avrà come numero di sequenza il valore del precedente più 1. Quando si è in trasmissione, viene memorizzato in una variabile, chiamata first_seq, il numero di sequenza iniziale del pacchetto con cui viene inviato il comando. Questo sarà infatti inserito in prima posizione, e i numeri di sequenza dei successivi aumentano progressivamente; quindi, l'indice in cui andrà inserito ogni pacchetto viene ricavato dal numero di sequenza iniziale. Infatti, sottraendo al numero di sequenza del pacchetto il numero di sequenza iniziale, e facendone l'operazione modulo con la dimensione della finestra più 1:  indice = (sequenza_pacchetto - sequenza_iniziale)%(dimensione finestra + 1) si ottiene la posizione in cui andrà inserito ogni pacchetto</c><c props="font-family:Times New Roman; font-size:14pt; color:000000; text-decoration:none; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT">(il più 1 è dovuto al motivo spiegato in precedenza)</c><c props="font-weight:normal; font-size:14pt">. Chi invia utilizza solamente il campo numero di sequenza del pacchetto, mettendo invece a -1 il numero di ack, ad indicare che non è utilizzato. In trasmissione viene anche memorizzato in una variabile, chiamata expected_ack, il numero di ack del pacchetto più vecchio non riscontrato ,che si trova nell'indice della finestra corrispondente al valore di S. Se il trasmettitore riceve un pacchetto con un numero di ack minore di quello contenuto nella variabile, il ricevitore lo scarterà, altrimenti si andrà a verificare il flag del pacchetto, ricavandone l'indice della finestra in cui è posizionato con il meccanismo spiegato precedentemente. Se questo pacchetto è già stato segnato come riscontrato, l'ack viene scartato; altrimenti si segna il pacchetto con il flag 2, indicando che l'ack è stato ricevuto. Quando l'indice dell'ack ricevuto corrisponde con il valore di S, viene fatta scorrere la finestra: si incrementa la variabile S finché vi sono pacchetti riscontrati, ovvero con flag uguale a 2, e il flag viene settato a -2, indicando quindi che in quella posizione possono essere inseriti nuovi dati; dopodiché, se ve ne sono, verranno inseriti nuovi pacchetti a partire dall'indice con valore E, fino a quando non sono terminati i pacchetti da inserire, oppure fino a quando la finestra non è piena, e verranno inviati. Per la ricezione, invece, la finestra viene utilizzata per ricevere pacchetti da salvare, e quindi vi sono delle differenze. Quando vengono ricevuti i pacchetti di comando, viene salvato il numero di sequenza del comando, e a partire da questo, andando a guardare ogni volta il numero di sequenza del pacchetto ricevuto, verrà ricavato in modo analogo alla trasmissione l'indice del buffer in cui andrà inserito il pacchetto. Chi riceve utilizza solamente la variabile S: questa rappresenta l'indice della finestra in cui andrà inserito il successivo pacchetto che verrà ricevuto. Come in trasmissione, viene memorizzato anche il numero di sequenza del primo pacchetto che ci si aspetta di ricevere. Se viene ricevuto un pacchetto con numero di sequenza minore, o che è già stato ricevuto, viene scartato, e verrà rimandato al trasmettitore un pacchetto con il campo numero di ack uguale al numero di sequenza ricevuto, ed il campo dati vuoto. Altrimenti, una volta ricavato l'indice della finestra in cui bisogna inserire il pacchetto, questo viene bufferizzato, e viene settato il flag al valore 0, indicando quindi che quella posizione della finestra è occupata; dopodiché, verrà inviato l'ack, mettendo sempre il numero di ack uguale al numero di sequenza ricevuto e il campo dati vuoto. Quando l'indice in cui va inserito un pacchetto ricevuto corrisponde al valore di S, viene fatta scorrere la finestra di ricezione: viene scritto il pacchetto in posizione S su file, dopodiché viene aumentata la variabile S, e viene settato il flag a 1, per indicare che in quella posizione possono essere inseriti nuovi dati.</c><c props="font-weight:normal; font-size:12pt"> </c><c props="font-weight:normal; font-size:14pt">Questa operazione andrà avanti finché vi saranno pacchetti segnati come ricevuti. Terminato ciò, il ricevitore si metterà in attesa di nuovi dati.</c></p>
+<p style="Normal" xid="70" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="65" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="121" props="text-align:left"><c></c><c></c></p>
+<p style="Normal" xid="588" props="text-align:left"><c></c></p>
+<p style="Normal" xid="589" props="text-align:left"><c></c></p>
+<p style="Normal" xid="66" props="text-align:left"><c props="font-weight:normal; font-size:16pt"></c><c></c></p>
+<p style="Normal" xid="67" props="text-align:center"><c props="font-weight:bold; font-size:16pt">GESTIONE DEI TIMER E DELLE RITRASMISSIONI</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="122" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="68" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="590" props="text-align:center"><c></c></p>
+<p style="Normal" xid="69" props="text-align:justify"><c props="font-weight:normal; font-size:14pt">Poiché i  pacchetti e gli ack possono perdersi, bisognerà ritrasmetterli quando opportuno. La gestione di questo è differente a seconda se ciò che si sta inviando o riscontrando è un messaggio di comando/fine trasmissione, oppure se è un pacchetto di un file. Nel primo caso, viene utilizzata la funzione setsockopt per impostare un timeout alla recvfrom. Per far ciò, è necessario passare alla setsockopt una struttura dati timespec, inizializzando i campi con il valore dei secondi e dei nanosecondi desiderato. Nel progetto, il timer viene impostato a 950000 nanosecondi: se non viene ricevuto nulla, verrà ritrasmesso il pacchetto di comando per cui si sta aspettando il riscontro. Se non viene ricevuto nulla, verranno effettuati un massimo di 10 tentativi; dopodiché, se ancora non è stata ricevuta risposta, si interromperà la trasmissione mostrando un messaggio di errore, indicando che non è stato possibile neanche iniziare la richiesta. Verrà quindi chiusa la connessione. Sia nel caso venga impostato un timeout adattivo, che nel caso in cui ne venga impostato uno fisso, per i pacchetti di comando si è scelto di utilizzare sempre un timeout fisso: questo perché, essendo pochi pacchetti, la stima riguardo i loro tempi di arrivo non è sempre affidabile. Diversa è la gestione dei per l'invio di pacchetti relativi ai file, una volta ricevuto il comando. Ogni pacchetto contiene infatti al proprio interno  un campo tstart, identificato sempre da una struttura dati timespec, destinato a contenere l'istante di invio del pacchetto. Per ottenere ciò, viene utilizzata la funzione clock_gettime; come argomenti, prende un clock_id, settato a CLOCK_MONOTONIC_RAW, e l'indirizzo di una struttura dati timespec, i cui campi, prima di passare la struttura dati alla funzione, vengono inizializzati a 0. Chiamando la funzione clock_gettime, si rimpiranno i campi realtivi ai secondi e ai nanosecondi della struttura con i valori misurati dalla funzione: viene memorizzato il numero di secondi trascorsi dal 1970, e il numero di nanosecondi trascorsi relativi all'ultimo secondo. Quando si vorrà misurare il tempo effettivo trascorso dall'istante di invio si effettuerà una sottrazione, utilizzando un'ulteriore struttura dati timespec, che verrà nuovamente passata alla clock_gettime quando si vorrà misurare il tempo. Inizialmente, il trasmettitore effettua un ciclo lungo quanto la dimensione della finestra in cui invia ad ogni iterazione un pacchetto; dopodiché, avvia un thread: questo si occuperà di controllare i pacchetti che sono scaduti e di ritrasmetterli. Quindi, in trasmissione vi sono due thread: uno dedicato alla trasmissione e alla ricezione dei pacchetti, l'altro dedicato alle ritrasmissioni. Per fare ciò, il thread delle ritrasmissioni riceverà dal thread di invio e ricezione una struttura dati,chiamata thread_data, contenente, oltre al thread_id, un puntatore alla finestra, l'identificatore della socket, e la struct sockaddr_in che utilizzerà per ritrasmettere pacchetti al ricevitore. La finestra contiene un intero chiamato end, che viene utilizzato dal thread per capire se sono stati ricevuti gli ack di tutti i pacchetti: inizialmente è quindi settata a 0. Il thread dormirà per 7  millisecondi, dopodiché scandirà la finestra. Per ogni pacchetto con flag 1,  che vuol dire quindi che è stato inviato, viene preso l'istante di tempo attuale, e si va a confrontare con l'istante di invio del pacchetto, mediante il meccanismo spiegato sopra: se il tempo trascorso è maggiore di quello del timeout stimato in quel momento, lo andrà a ritrasmettere, aggiornando l'istante di invio del pacchetto. Confrontando l'invio di pacchetti in locale e in remoto all'interno della stessa sottorete, in media l'ack di un pacchetto viene ricevuto dopo 1,5 millisecondi; tuttavia, il thread dedicato all'invio e alla ricezione, non appena riceve un ack, invia il pacchetto successivo, perciò la lettura di alcuni pacchetti avverrà qualche istante dopo l'effettivo arrivo. Tuttavia, con finestra di 60 e probabilità di perdita nulla, il caso peggiore misurato è sui 7 millisecondi; poiché non è possibile conoscere a priori la dimensione della finestra che verrà utilizzata, il thread scandirà la finestra a intervalli di tempo molto vicini a quelli stimati per la ricezione dei pacchetti con una finestra di dimensione 60, che rappresenta un valore intermedio. Con questo valore, si evitano ritrasmissioni superflue di pacchetti il cui riscontro potrebbe essere in arrivo. Quando viene ricevuto un ack, il thread delle ritrasmissioni potrebbe stare per ritrasmettere quel pacchetto, perciò il thread di invio, prima di settare il flag a 2, prende il mutex: in questo modo, si eviterà di ritrasmettere inutilmente quel pacchetto. Il timer dei pacchetti può essere adattativo o meno, a seconda del valore impostato nella macro ADAPTATIVE, contenuta nel file configurations.h. Il timer fisso è settato ad un valore di 15 millisecondi. Questo valore è quindi più del doppio del massimo valore misurato precedentemente per la ricezione di tutti i pacchetti con finestra 93 e probabilità di perdita nulla: rappresenta un compromesso con il tempo in cui il thread scandisce la finestra, il timer dei pacchetti, e la velocità di trasmissione. Come osservato da molti test, con questo valore si riesce ad ottenere la migliore velocità di trasmissione senza effettuare ritrasmissioni superflue. Valori minori del timer fisso causano un maggior numero di ritrasmissioni, a discapito quindi della velocità, poiché verranno ritrasmessi pacchetti vecchi e non si procederà all'inserimento e all'invio di nuovi. Valori maggiori, invece,  rendono troppo elevato il tempo di ritrasmissione, a discapito sempre della velocità di ritrasmissione. Il timer adattativo viene memorizzato in una struttura dati di tipo timespec, che è globale. Per il calcolo,viene utilizzata la stessa formula impiegata dal protocollo del livello di trasporto TCP: vi sono delle costanti, memorizzate sempre come variabili globali, chiamate alpha e beta, con i valori rispettivi di 0.125(che corrisponde ad 1/8) e 0.25(che corrisponde ad 1/4); vi sono poi i valori stimati di media e varianza del timeout, anch'essi memorizzati in variabili globali. Il timeout viene calcolato moltiplicando la media del tempo di andata e ritorno per 4, sommando a questa la sua varianza. Inizialmente, la media coincide con il valore del timer fisso mentre la varianza è nulla; dopodiché, non appena arriva un pacchetto, vengono ricalcolati entrambi i dati. La media viene calcolata moltiplicando il suo precedente valore stimato per (1-alpha), e sommando a questo il valore misurato del tempo di andata e ritorno del pacchetto. La varianza è calcolata invece moltiplicando il suo precedente valore  per (1- beta), e sommando a questo il modulo della differenza tra la media stimata del tempo di andata e ritorno e il tempo appena misurato, moltiplicato per beta. Per rappresentare i valori di alpha e besta sono stati utilizzati dei double, nonostante l'operatore di bitwise agisca in modo più efficiente; questo perché il risultato, come visto da alcuni test, in alcuni casi viene troncato e assume quindi un valore differente da quello desiderato. Poiché la struttura dati timespec contiene un campo secondi e uno nanosecondi, per ottenere un corretto valore del tempo viene normalizzato tutto in nanosecondi: viene quindi moltiplicato il valore dei secondi per 10^9, e gli viene sommato il valore dei nanosecondi. Per stimare il numero di secondi e nanosecondi corretto, verrà invece effettuato il procedimento inverso.</c></p>
+<p style="Normal" xid="71" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="123" props="text-align:left"><c></c><c></c></p>
+<p style="Normal" xid="72" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="131" props="text-align:left"><c></c><c></c></p>
+<p style="Normal" xid="591" props="text-align:left"><c></c></p>
+<p style="Normal" xid="73" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c props="font-weight:bold; font-size:16pt">GESTIONE DEI COMANDI: PUT</c></p>
+<p style="Normal" xid="74" props="text-align:center"><c props="font-weight:bold; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="76" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="124" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="125" props="text-align:justify"><c props="font-weight:normal; font-size:14pt"></c><c props="font-weight:normal; font-size:14pt">Quando un client richiede la put di un file, svolge il ruolo di trasmettitore mentre il server quello di ricevitore. </c><c props="font-family:Times New Roman; font-size:14pt; color:000000; text-decoration:none; text-position:normal; font-weight:normal; font-style:normal; lang:it-IT">Il comando di put, sia in caso di successo che di insuccesso, viene prima inserito in finestra e poi inviato. </c><c props="font-weight:normal; font-size:14pt">Prima di inviare il comando al server, viene verificata l''esistenza del file all'interno della directory del client, tramite la funzione access; nel caso il file non esista, viene mostrato un messaggio di errore ed il client termina la richiesta. In questo caso, il server, non ricevendo più nulla dal client, effettuerà un massimo di 10 tentativi di ricezione, con timeout impostato a 950000 nanosecondi; dopodiché se non ha ricevuto nulla, capirà che il client ha avuto un problema e terminerà la richiesta, rimettendosi in attesa sulla coda di messaggi. Nel caso invece il client richieda la put di un file che è già presente nella directory del server, questo invierà un pacchetto contenente nel campo dati il carattere '.';  il client interpreterà questo capendo che il file già esiste, ed invierà a sua volta un pacchetto al server con lo stesso contenuto nel campo dati, indicando quindi al server di aver ricevuto il messaggio. Dopodiché, stamperà un messaggio in standard output, avvertendo l'utente che quel file non è disponibile, dopodiché terminerà quindi la richiesta. Nel caso in cui invece il file può essere trasferito, il client attenderà di ricevere l'ack del server, che avrà il campo dati vuoto. Dopodiché invierà la dimensione del file e attenderà il riscontro del server. Una volta avvenuto ciò, inizierà la trasmissione vera e propria del file. In base alla lunghezza del file e alla massima dimensione del campo dati, client e server calcoleranno il numero di pacchetti: il campo dati di ogni pacchetto può contenere al massimo 1460 byte, perciò basterà dividere la lunghezza del file per 1460, gestendo i casi in cui la dimensione del file non sia divisibile per questo valore. Il client inizialmente invia n pacchetti, dove n è la dimensione della finestra scelta. Dopodiché, effettua un ciclo in cui continuamente riceve ack ed invia nuovi pacchetti al server. Il client memorizza in un intero, chiamato n_ack_received, il numero di riscontri che ha ricevuto: interromperà il ciclo quando questo numero sarà uguale al numero di pacchetti del file. Dopodiché, invierà il comando di fine connessione .Il server, invece, esegue un ciclo in cui riceve pacchetti ed invia gli ack di questi. Viene memorizzato in un intero, chiamato tot_write, il numero totale di byte che sono stati trasferiti su file: il ciclo verrà interrotto quando questo numero saà uguale alla dimensione del file. Dopodiché, aspetterà di ricevere il pacchetto di fine connessione ed invierà l'ack. Il server terminerà subito dopo, e nel caso l'ack venga perso, analogamente ai riscontri dei comandi, il client attenderà di ricevere l'ack per un massimo di 10 volte. dopodiché, terminerà, mostrando un messaggio in standard output che indica che il file è stato trasferito, ma il server non ha risposto.</c></p>
+<p style="Normal" xid="77" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="698" props="text-align:left"><c></c></p>
+<p style="Normal" xid="706" props="text-align:left"><c></c></p>
+<p style="Normal" xid="707" props="text-align:left">messaggio di errore mostrato in caso di file già presente nella directory del server:</p>
+<p style="Normal" xid="708" props="text-align:left"><c></c></p>
+<p style="Normal" xid="700" props="text-align:left"><c></c><image dataid="e2134cee-9bd6-11e7-851f-c15aeadb7669" xid="705" props="height:1.8750in; width:6.2604in"/></p>
+<p style="Normal" xid="701" props="text-align:left"><c></c></p>
+<p style="Normal" xid="702" props="text-align:left"><c></c></p>
+<p style="Normal" xid="703" props="text-align:left"><c></c></p>
+<p style="Normal" xid="592" props="text-align:left"><c></c></p>
+<p style="Normal" xid="593" props="text-align:left"><c></c></p>
+<p style="Normal" xid="594" props="text-align:left"><c></c></p>
+<p style="Normal" xid="595" props="text-align:left"><c></c></p>
+<p style="Normal" xid="78" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="79" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="80" props="text-align:center"><c props="font-weight:bold; font-size:16pt">COMANDI GET E LIST</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="81" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="82" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="596" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="597" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="598" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c><c props="font-weight:normal; font-size:14pt">Nel comando get, le cose funzionano in maniera differente. Inizialmente, il client svolge il ruolo di trasmettirore, inserendo il comando get in finestra ed inviandolo al server, mentre il server svolge il ruolo di ricevitore, inviando l'ack del comando. Da quel momento in poi, però, i ruoli si invertono: il server diventerà il trasmettitore, mentre il client il ricevitore. Questo passaggio avviene dopo l'invio dell'ack del comando da parte del server:  il client invierà a quest'ultimo un pacchetto contenente solamente il numero di ack, con lo stesso numero di ack che ha inviato il server, e metterà il numero di sequenza a -1.  Il server, poi, analogamente a ciò che faceva il client nella put, invierà la lunghezza del file e dopo aver ricevuto l'ack manderà i pacchetti.  Nel caso della get, il client, man mano che riceve i pacchetti, li andrà a bufferizzare e poi a scrivere sul file; se il comando richiesto è  una list, il contenuto dei pacchetti verrà stampato, in modo ordinato, sullo standard output. Per ottenere la lista di file contenuta nella directory del server, questo mantiene un file, chiamato «list_file.txt», contenente i file presenti all'interno della propria directory. Questo è aggiornato ogni volta dal processo padre del server ogni volta che riceve una richiesta. La lista dei file viene ottenuta tramite la funzione scandir, che memorizza all'interno di una struttura dati i nomi dei file. Quando un client effettua la get di un file, il server deve però fare un ulteriore controllo: qualcuno potrebbe stare eseguendo la put di quel file, e bisogna quindi aspettare che sia stato completamente scritto prima di poterlo distribuire ai client. Perciò, dopo averne verificato l'esistenza nella propria directory, va a verificare se qualcuno ha preso il lock in scrittura su quel file, tramite la funzione fcntl: in caso il file sia bloccato, il server invia al client un pacchetto con il campo dati contenente in prima posizione il carattere '\0'; ciò viene fatto anche se il file richiesto non è presente nella directory. In entrambi i casi, il client interpreterà questo come messaggio che il file non è disponibile.</c><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="83" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="84" props="text-align:left"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="599" props="text-align:left"><c></c></p>
+<p style="Normal" xid="709" props="text-align:left">esempio comando list:</p>
+<p style="Normal" xid="710" props="text-align:left"><c></c></p>
+<p style="Normal" xid="711" props="text-align:left"><c></c><image dataid="a7c775f0-9bd7-11e7-851f-c15aeadb7669" xid="715" props="height:2.56in; width:3.59in"/></p>
+<p style="Normal" xid="716" props="text-align:left"></p>
+<p style="Normal" xid="717" props="text-align:left"></p>
+<p style="Normal" xid="718" props="text-align:left"></p>
+<p style="Normal" xid="719" props="text-align:left"></p>
+<p style="Normal" xid="712" props="text-align:left"><c></c></p>
+<p style="Normal" xid="713" props="text-align:left"><c></c></p>
+<p style="Normal" xid="600" props="text-align:left"><c></c></p>
+<p style="Normal" xid="85" props="text-align:left"><c props="font-weight:normal; font-size:16pt"></c><c></c></p>
+<p style="Normal" xid="86" props="text-align:center"><c props="font-weight:bold; font-size:16pt">INVIO E RICEZIONE DEI PACCHETTI</c><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="127" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="128" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="89" props="text-align:center"><c props="font-weight:bold; font-size:14pt"></c><c></c></p>
+<p style="Normal" xid="91" props="text-align:justify"><c props="font-weight:normal; font-size:14pt">Per l'invio dei pacchetti, sia client che server utilizzando la funzione definita nella libreria packet_functions.h chiamata send_packet; a questa vengono passati l'identificativo della socket, la struttura dati sockaddr_in con le informazioni del ricevente, il pacchetto da inviare e la probabilità di perdita, che è contenuta nel file configurations.h. Quando si va ad inviare un pacchetto, viene generato un numero casuale, e a seconda se questo è maggiore o minore del valore contenuto nella macro, il pacchetto verrà scartato o inviato. Per la ricezione dei pacchetti, invece, viene distinto il caso in cui si sta aspettando di ricevere un comando o un ack relativo ad esso, e il caso in cui invece si sta aspettando di ricevere un pacchetto di un file o un ack sempre relativo ad un pacchetto di file. Nel primo caso,  viene utilizzata la funzione receive_ack, la quale appunto tiene conto sia del caso in cui si sta aspettando di ricevere un ack ,sia del caso in cui invece si sta aspettando un comando. Oltre a ricevere, questa si occupa, se necessario, di ritrasmettere il pacchetto per cui si sta attendendo il riscontro. Perciò, come argomenti, oltre al puntatore alla finestra ed il numero di sequenza o di ack che si sta aspettando, prende tutte le informazioni necessarie per  la ritrasmissione: vi è la struttura dati sockaddr_in, che sarà utilizzata per ritrasmettere il pacchetto; poi, vi è un carattere può assumere il valore 's' o 'r'. Il primo caso indica che si è in trasmissione, e si sta quindi aspettando l'ack di un pacchetto; nel caso non venga ricevuto nulla, l'operazione da fare è quella di scandire la finestra per rimandare i pacchetti che sono segnati come inviati ma non ancora riscontrati: verrà quindi invocata la funzione check_window. Il secondo caso indica invece che si è in ricezione, e, se si riceve un pacchetto con un numero di sequenza minore di quello che si sta aspettando, verrà rimandato l'ack per il pacchetto precedente. Tuttavia, nel caso l'operazione sia una get, e il file non è al momento disponibile, come detto in precedenza, il server riempie il campo dati con il carattere '.' . Se l'ack viene perso, non può limitarsi a rimandarlo: dovrà infatti segnalare al client che l'operazione non può essere eseguita. L'intero passato alla funzione receive_ack tiene conto di questo caso: se è settato a 1, il server riempirà nuovamente il campo dati indicando che il file non può essere trasferito, in modo che il client interpreti l'operazione come non disponibile. In tutti gli altri casi, questo intero sarà invece settato a 0.</c><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="129" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c><c></c></p>
+<p style="Normal" xid="130" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="132" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="500" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="501" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="502" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="503" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="504" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="505" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="133" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="134" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="135" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="136" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="137" props="text-align:center"><c props="font-weight:bold; font-size:16pt">STATISTICHE RELATIVE AI TEMPI DI ESECUZIONE</c></p>
+<p style="Normal" xid="256" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="507" props="text-align:justify"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="510" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Di seguito, sono riportati alcuni dati relativi all'invio e alla ricezione di file, in cui sono stati fatti variare la dimensione della finestra, la probabilità di perdita, la dimensione del file, ed è stato utilizzato per ogni misurazione sia il timer adattativo sia il timer fisso. Nella prima colonna è riportato il tempo di esecuzione, nella seconda la dimensione del file, nella terza la probabilità di perdita utilizzata per i pacchetti e per i comandi, nella terza la dimensione della finestra utilizzata, e nell'ultima tabella il tipo di timer utilizzato. Sotto la colonna time e quella di adaptive, sono riportate due righe: in quella relativa ad adaptive, se il valore è 0 vuol dire che il timer utilizzato è fisso, se 1 il timer è di tipo adattativo. Sotto la voce time sono quindi riportate le due corrispondenti righe: la prima è relativa al tempo impiegato quando il timer è fisso, la seconda invece quando il timer è variabile. Si è scelto di utilizzare una probabilità di perdita differente per comandi e pacchetti a scopo di test: un'alta percentuale di perdita sui comandi, infatti, porta a non iniziare nemmeno la comunicazione. Inoltre, poiché il trasmettitore, una volta terminato il trasferimento del file e inviato il pacchetto che indica la fine della connessione, aspetta di ricevere l'ack dal ricevitore, con un'alta probabilità di perdita questo può venire perso. Come spiegato in precedenza, il trasmettitore effettua un massimo di 10 tentativi, aspettando 1 secondo. Quindi, con il 90% di perdita, il tempo impiegato per il trasferimento effettivo è di 10 secondi di meno dell'effettivo tempo richiesto per il trasferimento vero e proprio del file. </c></p>
+<p style="Normal" xid="508" props="text-align:left"><c props="font-weight:bold; font-size:14pt"></c></p>
+<p style="Normal" xid="499" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="257" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="258" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="259" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<table xid="188" props="table-column-props:3.12cm/3.12cm/4.37cm/3.12cm/4.87cm/; table-row-heights:2.00cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/1.37cm/; table-column-leftpos:-1.62cm; list-tag:1">
+<cell xid="189" props="bot-attach:1; left-attach:0; right-attach:1; top-attach:0">
+<p style="Normal" xid="190" props="font-size:16pt"><c props="font-weight:bold">TIME</c></p>
+</cell>
+<cell xid="192" props="bot-attach:1; left-attach:1; right-attach:2; top-attach:0">
+<p style="Normal" xid="193" props="font-size:16pt"><c props="font-weight:bold">SIZE</c></p>
+</cell>
+<cell xid="195" props="bot-attach:1; left-attach:2; right-attach:3; top-attach:0">
+<p style="Normal" xid="196" props="font-size:16pt"><c props="font-weight:bold">LOSS COMMAND/PACKET</c></p>
+</cell>
+<cell xid="198" props="bot-attach:1; left-attach:3; right-attach:4; top-attach:0">
+<p style="Normal" xid="199" props="font-size:16pt"><c props="font-weight:bold">WINDOW</c></p>
+</cell>
+<cell xid="201" props="bot-attach:1; left-attach:4; right-attach:5; top-attach:0">
+<p style="Normal" xid="202" props="font-size:16pt"><c props="font-weight:bold">ADAPTATIVE</c></p>
+</cell>
+<cell xid="631" props="bot-attach:2; left-attach:0; right-attach:1; top-attach:1">
+<p style="Normal" xid="632" props="font-size:16pt">48.02</p>
+<p style="Normal" xid="651" props="font-size:16pt"><c></c>38.17s</p>
+</cell>
+<cell xid="634" props="bot-attach:2; left-attach:1; right-attach:2; top-attach:1">
+<p style="Normal" xid="635" props="font-size:16pt">75 MB</p>
+</cell>
+<cell xid="637" props="bot-attach:2; left-attach:2; right-attach:3; top-attach:1">
+<p style="Normal" xid="638" props="font-size:16pt">20/20</p>
+</cell>
+<cell xid="640" props="bot-attach:2; left-attach:3; right-attach:4; top-attach:1">
+<p style="Normal" xid="641" props="font-size:16pt">10</p>
+</cell>
+<cell xid="643" props="bot-attach:2; left-attach:4; right-attach:5; top-attach:1">
+<p style="Normal" xid="644" props="font-size:16pt">0</p>
+<p style="Normal" xid="650" props="font-size:16pt">1</p>
+</cell>
+<cell xid="616" props="bot-attach:3; left-attach:0; right-attach:1; top-attach:2">
+<p style="Normal" xid="617" props="font-size:16pt">35.4s</p>
+<p style="Normal" xid="648" props="font-size:16pt"><c></c>12.2s</p>
+</cell>
+<cell xid="619" props="bot-attach:3; left-attach:1; right-attach:2; top-attach:2">
+<p style="Normal" xid="620" props="font-size:16pt">55 MB</p>
+</cell>
+<cell xid="622" props="bot-attach:3; left-attach:2; right-attach:3; top-attach:2">
+<p style="Normal" xid="623" props="font-size:16pt">20/20</p>
+</cell>
+<cell xid="625" props="bot-attach:3; left-attach:3; right-attach:4; top-attach:2">
+<p style="Normal" xid="626" props="font-size:16pt">10</p>
+</cell>
+<cell xid="628" props="bot-attach:3; left-attach:4; right-attach:5; top-attach:2">
+<p style="Normal" xid="629" props="font-size:16pt">0</p>
+<p style="Normal" xid="649" props="font-size:16pt">1</p>
+</cell>
+<cell xid="601" props="bot-attach:4; left-attach:0; right-attach:1; top-attach:3">
+<p style="Normal" xid="602" props="font-size:16pt">11.1s</p>
+<p style="Normal" xid="646" props="font-size:16pt"><c></c>3.8s</p>
+</cell>
+<cell xid="604" props="bot-attach:4; left-attach:1; right-attach:2; top-attach:3">
+<p style="Normal" xid="605" props="font-size:16pt">25 MB</p>
+</cell>
+<cell xid="607" props="bot-attach:4; left-attach:2; right-attach:3; top-attach:3">
+<p style="Normal" xid="608" props="font-size:16pt">20/20</p>
+</cell>
+<cell xid="610" props="bot-attach:4; left-attach:3; right-attach:4; top-attach:3">
+<p style="Normal" xid="611" props="font-size:16pt">10</p>
+</cell>
+<cell xid="613" props="bot-attach:4; left-attach:4; right-attach:5; top-attach:3">
+<p style="Normal" xid="614" props="font-size:16pt">0</p>
+<p style="Normal" xid="647" props="font-size:16pt">1</p>
+</cell>
+<cell xid="344" props="bot-attach:5; left-attach:0; right-attach:1; top-attach:4">
+<p style="Normal" xid="345" props="font-size:16pt">181s</p>
+<p style="Normal" xid="390" props="font-size:16pt">61,7s</p>
+</cell>
+<cell xid="347" props="bot-attach:5; left-attach:1; right-attach:2; top-attach:4">
+<p style="Normal" xid="348" props="font-size:16pt">75 MB</p>
+</cell>
+<cell xid="350" props="bot-attach:5; left-attach:2; right-attach:3; top-attach:4">
+<p style="Normal" xid="351" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="353" props="bot-attach:5; left-attach:3; right-attach:4; top-attach:4">
+<p style="Normal" xid="354" props="font-size:16pt">10</p>
+</cell>
+<cell xid="356" props="bot-attach:5; left-attach:4; right-attach:5; top-attach:4">
+<p style="Normal" xid="357" props="font-size:16pt">0</p>
+<p style="Normal" xid="394" props="font-size:16pt">1</p>
+</cell>
+<cell xid="329" props="bot-attach:6; left-attach:0; right-attach:1; top-attach:5">
+<p style="Normal" xid="330" props="font-size:16pt">134,4s</p>
+<p style="Normal" xid="391" props="font-size:16pt">45,7s</p>
+</cell>
+<cell xid="332" props="bot-attach:6; left-attach:1; right-attach:2; top-attach:5">
+<p style="Normal" xid="333" props="font-size:16pt">55 MB</p>
+</cell>
+<cell xid="335" props="bot-attach:6; left-attach:2; right-attach:3; top-attach:5">
+<p style="Normal" xid="336" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="338" props="bot-attach:6; left-attach:3; right-attach:4; top-attach:5">
+<p style="Normal" xid="339" props="font-size:16pt">10</p>
+</cell>
+<cell xid="341" props="bot-attach:6; left-attach:4; right-attach:5; top-attach:5">
+<p style="Normal" xid="342" props="font-size:16pt">0</p>
+<p style="Normal" xid="395" props="font-size:16pt">1</p>
+</cell>
+<cell xid="374" props="bot-attach:7; left-attach:0; right-attach:1; top-attach:6">
+<p style="Normal" xid="375" props="font-size:16pt">42.8s</p>
+<p style="Normal" xid="393" props="font-size:16pt">15.9s</p>
+</cell>
+<cell xid="377" props="bot-attach:7; left-attach:1; right-attach:2; top-attach:6">
+<p style="Normal" xid="378" props="font-size:16pt">25 MB</p>
+</cell>
+<cell xid="380" props="bot-attach:7; left-attach:2; right-attach:3; top-attach:6">
+<p style="Normal" xid="381" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="383" props="bot-attach:7; left-attach:3; right-attach:4; top-attach:6">
+<p style="Normal" xid="384" props="font-size:16pt">10</p>
+</cell>
+<cell xid="386" props="bot-attach:7; left-attach:4; right-attach:5; top-attach:6">
+<p style="Normal" xid="387" props="font-size:16pt">0</p>
+<p style="Normal" xid="396" props="font-size:16pt">1</p>
+</cell>
+<cell xid="397" props="bot-attach:8; left-attach:0; right-attach:1; top-attach:7">
+<p style="Normal" xid="398" props="font-size:16pt">69.1s</p>
+<p style="Normal" xid="413" props="font-size:16pt">24,04s</p>
+</cell>
+<cell xid="400" props="bot-attach:8; left-attach:1; right-attach:2; top-attach:7">
+<p style="Normal" xid="401" props="font-size:16pt">75 MB</p>
+</cell>
+<cell xid="403" props="bot-attach:8; left-attach:2; right-attach:3; top-attach:7">
+<p style="Normal" xid="404" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="406" props="bot-attach:8; left-attach:3; right-attach:4; top-attach:7">
+<p style="Normal" xid="407" props="font-size:16pt">30</p>
+</cell>
+<cell xid="409" props="bot-attach:8; left-attach:4; right-attach:5; top-attach:7">
+<p style="Normal" xid="410" props="font-size:16pt">0</p>
+<p style="Normal" xid="412" props="font-size:16pt">1</p>
+</cell>
+<cell xid="414" props="bot-attach:9; left-attach:0; right-attach:1; top-attach:8">
+<p style="Normal" xid="415" props="font-size:16pt">51.7s</p>
+<p style="Normal" xid="429" props="font-size:16pt">18.1s</p>
+</cell>
+<cell xid="417" props="bot-attach:9; left-attach:1; right-attach:2; top-attach:8">
+<p style="Normal" xid="418" props="font-size:16pt">55 MB</p>
+</cell>
+<cell xid="420" props="bot-attach:9; left-attach:2; right-attach:3; top-attach:8">
+<p style="Normal" xid="421" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="423" props="bot-attach:9; left-attach:3; right-attach:4; top-attach:8">
+<p style="Normal" xid="424" props="font-size:16pt">30</p>
+</cell>
+<cell xid="426" props="bot-attach:9; left-attach:4; right-attach:5; top-attach:8">
+<p style="Normal" xid="427" props="font-size:16pt">0</p>
+<p style="Normal" xid="430" props="font-size:16pt">1</p>
+</cell>
+<cell xid="431" props="bot-attach:10; left-attach:0; right-attach:1; top-attach:9">
+<p style="Normal" xid="432" props="font-size:16pt">16.03s</p>
+<p style="Normal" xid="447" props="font-size:16pt">5.8s</p>
+</cell>
+<cell xid="434" props="bot-attach:10; left-attach:1; right-attach:2; top-attach:9">
+<p style="Normal" xid="435" props="font-size:16pt">25 MB</p>
+</cell>
+<cell xid="437" props="bot-attach:10; left-attach:2; right-attach:3; top-attach:9">
+<p style="Normal" xid="438" props="font-size:16pt">50/50</p>
+</cell>
+<cell xid="440" props="bot-attach:10; left-attach:3; right-attach:4; top-attach:9">
+<p style="Normal" xid="441" props="font-size:16pt">30</p>
+</cell>
+<cell xid="443" props="bot-attach:10; left-attach:4; right-attach:5; top-attach:9">
+<p style="Normal" xid="444" props="font-size:16pt">0</p>
+<p style="Normal" xid="446" props="font-size:16pt">1</p>
+</cell>
+<cell xid="448" props="bot-attach:11; left-attach:0; right-attach:1; top-attach:10">
+<p style="Normal" xid="449" props="font-size:16pt">218s</p>
+<p style="Normal" xid="496" props="font-size:16pt">77.5s</p>
+</cell>
+<cell xid="451" props="bot-attach:11; left-attach:1; right-attach:2; top-attach:10">
+<p style="Normal" xid="452" props="font-size:16pt">75 MB</p>
+</cell>
+<cell xid="454" props="bot-attach:11; left-attach:2; right-attach:3; top-attach:10">
+<p style="Normal" xid="455" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="457" props="bot-attach:11; left-attach:3; right-attach:4; top-attach:10">
+<p style="Normal" xid="458" props="font-size:16pt">80</p>
+</cell>
+<cell xid="460" props="bot-attach:11; left-attach:4; right-attach:5; top-attach:10">
+<p style="Normal" xid="461" props="font-size:16pt">0</p>
+<p style="Normal" xid="493" props="font-size:16pt">1</p>
+</cell>
+<cell xid="463" props="bot-attach:12; left-attach:0; right-attach:1; top-attach:11">
+<p style="Normal" xid="464" props="font-size:16pt">161s</p>
+<p style="Normal" xid="497" props="font-size:16pt">62.5s</p>
+</cell>
+<cell xid="466" props="bot-attach:12; left-attach:1; right-attach:2; top-attach:11">
+<p style="Normal" xid="467" props="font-size:16pt">55 MB</p>
+</cell>
+<cell xid="469" props="bot-attach:12; left-attach:2; right-attach:3; top-attach:11">
+<p style="Normal" xid="470" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="472" props="bot-attach:12; left-attach:3; right-attach:4; top-attach:11">
+<p style="Normal" xid="473" props="font-size:16pt">80</p>
+</cell>
+<cell xid="475" props="bot-attach:12; left-attach:4; right-attach:5; top-attach:11">
+<p style="Normal" xid="476" props="font-size:16pt">0</p>
+<p style="Normal" xid="494" props="font-size:16pt">1</p>
+</cell>
+<cell xid="478" props="bot-attach:13; left-attach:0; right-attach:1; top-attach:12">
+<p style="Normal" xid="479" props="font-size:16pt">51.9s</p>
+<p style="Normal" xid="498" props="font-size:16pt">20.3s</p>
+</cell>
+<cell xid="481" props="bot-attach:13; left-attach:1; right-attach:2; top-attach:12">
+<p style="Normal" xid="482" props="font-size:16pt">25 MB</p>
+</cell>
+<cell xid="484" props="bot-attach:13; left-attach:2; right-attach:3; top-attach:12">
+<p style="Normal" xid="485" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="487" props="bot-attach:13; left-attach:3; right-attach:4; top-attach:12">
+<p style="Normal" xid="488" props="font-size:16pt">80</p>
+</cell>
+<cell xid="490" props="bot-attach:13; left-attach:4; right-attach:5; top-attach:12">
+<p style="Normal" xid="491" props="font-size:16pt">0</p>
+<p style="Normal" xid="495" props="font-size:16pt">1</p>
+</cell>
+<cell xid="515" props="bot-attach:14; left-attach:0; right-attach:1; top-attach:13">
+<p style="Normal" xid="516" props="font-size:16pt">219.8s</p>
+<p style="Normal" xid="531" props="font-size:16pt">77.8s</p>
+</cell>
+<cell xid="518" props="bot-attach:14; left-attach:1; right-attach:2; top-attach:13">
+<p style="Normal" xid="519" props="font-size:16pt">75MB</p>
+</cell>
+<cell xid="521" props="bot-attach:14; left-attach:2; right-attach:3; top-attach:13">
+<p style="Normal" xid="522" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="524" props="bot-attach:14; left-attach:3; right-attach:4; top-attach:13">
+<p style="Normal" xid="525" props="font-size:16pt">120</p>
+</cell>
+<cell xid="527" props="bot-attach:14; left-attach:4; right-attach:5; top-attach:13">
+<p style="Normal" xid="528" props="font-size:16pt">0</p>
+<p style="Normal" xid="530" props="font-size:16pt">1</p>
+</cell>
+<cell xid="532" props="bot-attach:15; left-attach:0; right-attach:1; top-attach:14">
+<p style="Normal" xid="533" props="font-size:16pt">164s</p>
+<p style="Normal" xid="548" props="font-size:16pt">64.3s</p>
+</cell>
+<cell xid="535" props="bot-attach:15; left-attach:1; right-attach:2; top-attach:14">
+<p style="Normal" xid="536" props="font-size:16pt">55 MB</p>
+</cell>
+<cell xid="538" props="bot-attach:15; left-attach:2; right-attach:3; top-attach:14">
+<p style="Normal" xid="539" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="541" props="bot-attach:15; left-attach:3; right-attach:4; top-attach:14">
+<p style="Normal" xid="542" props="font-size:16pt">120</p>
+</cell>
+<cell xid="544" props="bot-attach:15; left-attach:4; right-attach:5; top-attach:14">
+<p style="Normal" xid="545" props="font-size:16pt">0</p>
+<p style="Normal" xid="547" props="font-size:16pt">1</p>
+</cell>
+<cell xid="652" props="bot-attach:16; left-attach:0; right-attach:1; top-attach:15">
+<p style="Normal" xid="653" props="font-size:16pt"><c></c>54.2s</p>
+<p style="Normal" xid="668" props="font-size:16pt">20.5s</p>
+</cell>
+<cell xid="655" props="bot-attach:16; left-attach:1; right-attach:2; top-attach:15">
+<p style="Normal" xid="656" props="font-size:16pt">25 MB</p>
+</cell>
+<cell xid="658" props="bot-attach:16; left-attach:2; right-attach:3; top-attach:15">
+<p style="Normal" xid="659" props="font-size:16pt">90/50</p>
+</cell>
+<cell xid="661" props="bot-attach:16; left-attach:3; right-attach:4; top-attach:15">
+<p style="Normal" xid="662" props="font-size:16pt">120</p>
+</cell>
+<cell xid="664" props="bot-attach:16; left-attach:4; right-attach:5; top-attach:15">
+<p style="Normal" xid="665" props="text-align:justify; font-size:16pt">0</p>
+<p style="Normal" xid="669" props="font-size:16pt">1</p>
+</cell>
+</table>
+<p style="Normal" xid="140" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="326" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="513" props="text-align:justify"><c props="font-weight:normal; font-size:14pt">Come si può vedere dai dati, con una finestra non elevata come 10, aumentando la probabilità di perdita di pacchetti di file e di comando dal 20% al 50%, il tempo può crescere anche del quadruplo. Utilizzando il timer adattativo, il tempo migliora notevolmente, riducendosi del triplo. Con la stessa probabilità di perdita, triplicando la finestra, il tempo di esecuzione si riduce all'incirca di due terzi. Aumentando la probabilità di perdita dei pacchetti a 90, quindi poco meno della metà, e aumentando invece la finestra ad 80, il tempo di esecuzione diventa poco più del triplo di quello precedente. Aumentando la finestra a 120, oltre quindi il massimo valore consentito che è 93, come si può vedere, il tempo di esecuzione è aumentato: questo è dovuto al motivo spiegato in precedenza, poiché con dimensione della finestra maggiore di 93 viene saturato il buffer di ricezione di UDP, e vengono persi pacchetti anche se viene impostata probabilità di perdita nulla.</c></p>
+<p style="Normal" xid="328" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="670" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="671" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="672" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="673" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="674" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="675" props="text-align:center"><c props="font-weight:bold; font-size:16pt">LIMITAZIONI RISCONTRATE</c></p>
+<p style="Normal" xid="676" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="677" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="679" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Per quanto riguarda le limitazioni, il massimo valore di un file che può essere trasferito è all'incirca di 3135 giga. Infatti, i numeri di sequenza sono generati tra 1 e 1000, in una variabile di tipo intero, il cui massimo valore è 2147483647, dopodiché andrà in overflow. Quindi, nel caso peggiore, supponendo venga generato proprio 1000, sarà possibile inviare 2147482647, ognuno contenente 1460 byte; perciò, moltiplicando quest'ultimo per il numero di pacchetti massimo, si ottiene il valore di 3.135*(10^12) byte, che corrisponde appunto a 3135 giga. </c></p>
+<p style="Normal" xid="682" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Un'altra limitazione riscontrata è relativa al timer. Come detto in precedenza, il Round Trip Time misurati in locale e in remoto nella stessa sottorete è all'incirca di 1.5 millisecondi. Tuttavia, il thread che si occupa di inviare e ricevere pacchetti, effettua un ciclo lungo quanto la dimensione della finestra ed invia pacchetti; dopodiché, ogni volta che riceve un ack, ne invia un altro. Perciò, in caso di finestra con dimensione elevata, il tempo di andata e ritorno di molti pacchetti è maggiore di quello reale. A questo scopo, se il tempo misurato è maggiore di 3 millisecondi, non viene preso in considerazione per il calcolo del timeout adattativo, poiché è considerato un valore superiore a quello reale e quindi non attendibile. Si può verificare un'altra situazione che può dare informazioni errate riguardo il tempo di andata e ritorno: l'ack di un pacchetto è in arrivo ma il trasmettitore è occupato in altre operazioni, perciò il thread delle ritrasmissioni ritrasmette il pacchetto prima che possa esserne ricevuto l'ack, resettandone l'istante di invio. Quando il trasmettitore tornerà a ricevere pacchetti, troverà l'ack di questo pacchetto, che era arrivato precedentemente alla ritrasmissione; tuttavia, l'istante di invio ora è settato a quello della ritrasmissione, perciò il tempo misurato assumerà un valore inconsistente, e che sarà molto basso. Per gestire questa situazione, se il tempo misurato è minore di 1 millisecondo, non viene preso in considerazione nel calcolo del timeout adattativo.</c></p>
+<p style="Normal" xid="683" props="text-align:left"><c props="font-weight:normal; font-size:14pt"></c></p>
+<p style="Normal" xid="684" props="text-align:left"><c props="font-weight:normal; font-size:12pt">screen dei tempi misurati per il Round Trip Time in locale, con valore della finestra settato a 90  probabilità di perdita nulla:</c></p>
+<p style="Normal" xid="692" props="text-align:justify"><c props="font-weight:normal; font-size:12pt"></c></p>
+<p style="Normal" xid="681" props="text-align:left"><c></c><image dataid="7fd59f6e-9bd6-11e7-851f-c15aeadb7669" xid="691" props="height:6.25in; width:3.68in"/></p>
+<p style="Normal" xid="693" props="text-align:left"></p>
+<p style="Normal" xid="694" props="text-align:left"></p>
+<p style="Normal" xid="695" props="text-align:left"></p>
+<p style="Normal" xid="696" props="text-align:left"></p>
+<p style="Normal" xid="697" props="text-align:left"></p>
+<p style="Normal" xid="549" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="550" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="551" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="552" props="text-align:center"><c props="font-weight:bold; font-size:16pt">CONFIGURAZIONE DELLE COSTANTI E INSTALLAZIONE</c></p>
+<p style="Normal" xid="559" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="687" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="688" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="689" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="560" props="text-align:left"><c props="font-weight:normal; font-size:14pt">Per installare il client e il server, è sufficiente scrivere sul terminale «make all»; per rimuovere tutti i file oggetto, bisogna invece scrivere «make clean». Le costanti di configurazione, come la dimensione della finestra, la possibilità di utilizzare timer adattativo o fisso, la probabilità di perdita dei comandi e quella dei pacchetti, sono contenute nel file «configurations.h» nelle macro: DIMWIN, ADAPTATIVE, COMMAND_LOSS, PACKET LOSS. Per modificare, bisogna cambiarne il valore all'interno del file; dopodiché, bisogna rimuovere i precedenti file oggetto, digitando quindi «make clean», e ricompilare digitando invece «make all». Il client deve essere avviato passandogli come argomento l'indirizzo IP del server che si desidera contattare, e se provato da locale va inserito il seguente indirizzo: 127.0.0.1. Il server non richiede invece argomenti all'avvio.</c></p>
+<p style="Normal" xid="553" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="554" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="555" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="556" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="557" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+<p style="Normal" xid="558" props="text-align:center"><c props="font-weight:bold; font-size:16pt"></c></p>
+</section>
+<data>
+<d name="7fd59f6e-9bd6-11e7-851f-c15aeadb7669" mime-type="image/png" base64="yes">
+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
+</d>
+<d name="a7c775f0-9bd7-11e7-851f-c15aeadb7669" mime-type="image/png" base64="yes">
+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
+</d>
+<d name="e2134cee-9bd6-11e7-851f-c15aeadb7669" mime-type="image/png" base64="yes">
+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
+xe41Z/fLGeirY+k7a/FH44Trl1GxPY+yft1wpNjXdrqUg4iIiKQ1E9NDnidK68H2E3/8b8PI
+yMMda6UtfOTMUKydlgD08boxrIPUvVHOmokTmPijG8mJ7aL6ny/zbuW+5MWeFSF0tICzYsTi
+Bk6ngZGZhzt8gOCRBqxQM8FYB85K2eRnm4NNLHZxOrIK8LjLGHf3L/jakZcdbget9W4M00ip
+r+10KQcRERFJaybRAP6ASW9fFg6CJy9A4nEwnHy6PLBCfiLOPnjdBoQscGaR44FQWxgLsJrX
+8/H89XxsuMkfdAs3TZlCrw1z2BZMLVAr2EzYXUCmCUQPFziZHSlYbPJLlkNKcQb2095Syb+e
+nMvu4x/ObviS9zVgdKIOOx05iIiISHpwYB1i2/Lt5I2ezICiTAzDibf3JZTkO4+9KebfRSD3
+fIpzPrnkF2uupuZQT4YM70umwyS7/xgGZu9g464AGB4KBw6iODcDgxjRWAwrGibahdNY0cbV
+1IXLGHJpMS7DQ9HQkRS5OrChTX62OaQcZyUb2wYycmR/sk0Dw/Ti6zeEPvlO21gOixPyB3EV
+nku203Y3x5yOHERERCQ9mBDHX/ESC703M+bOR5iQGSdQX8mSeeuOvSnasJgl67/PNfc/ycRo
+LW89/muqWupZMf91cm+4g9mjPMRb6lj355epbo6DYZBVMp7x024nx20Qa65lzRvl7AkD7jLG
+33U7ZV6TTI8bZv6S3pEQ9X99ggUbbCIN1/Hhq4u4dvq/8cOr29mzqpKGUP8OpGiTX9Qmh1QX
+nonuYcXc+biuv5lZDxXgsoL4d65i2Z9W28dyJNa26jdZP3QGMx6cSCxYw9u/mcPmSN/Efbbm
+NOQgIiIiaeGMfdat4b2MG+8bzbqnnqK65YxMQUREROS0OoNuv3TiLRlAcY4Lw3DR7eKr8B1c
+x14tEyIiIiJyUmZFzwds3zB0z39/TqEkY+DuOZrrZn2PbEeMUOMalr72Pl1YmUREREQkrdle
+uq3o+cCXqNATERERkc44gy7dioiIiEhnqNATERERSVMq9ERERETSlAo9ERERkTSlQk9EREQk
+TanQExEREUlTKvRERERE0pQKPREREZE0pUJPREREJE2p0BMRERFJUyr0RERERNKUCj0RERGR
+NKVCT0RERCRNqdATERERSVNmRc8HvugYREREROQ0MMYNLrW+6CBERERE5NTTpVsRERGRNKVC
+T0RERCRNqdATERERSVMq9ERERETSlAo9ERERkTSlQk9EREQkTanQExEREUlTKvRERERE0pQK
+PREREZE0pUJPREREJE2p0BMRERFJUyr0RERERNKUCj0RERGRNKVCT0RERCRNqdATERERSVMq
+9ERERETSlAo9ERERkTSlQk9EREQkTanQExEREUlTKvRERERE0pQKPREREZE0pUJPREREJE2p
+0BMRERFJUyr0RERERNKUCj0RERGRNKVCT0RERCRNqdATERERSVMq9ERERETSlAo9ERERkTSl
+Qk9EREQkTanQExEREUlTKvRERERE0pQKPREREZE0pUJPREREJE2p0BMRERFJUyr0RERERNKU
+Cj0RERGRNKVCT0RERCRNqdATERERSVMq9ERERETSlAo9ERERkTSlQk9EREQkTanQExEREUlT
+KvRERERE0tT/B5oH22it/CrPAAAAAElFTkSuQmCC
+</d>
+</data>
+</abiword>

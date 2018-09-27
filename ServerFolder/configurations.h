@@ -1,0 +1,4 @@
+#define PACKET_LOSS 60
+#define COMMAND_LOSS 50
+#define ADAPTATIVE 1
+#define DIMWIN 80
