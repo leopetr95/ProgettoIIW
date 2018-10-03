@@ -15,6 +15,7 @@
 extern int n_win;
 int adaptive;
 
+/*Definisce la struttura del pacchetto dati*/
 typedef struct segmentPacket{
 
 	int type;
@@ -24,6 +25,7 @@ typedef struct segmentPacket{
 
 }segmentPacket;
 
+/*Definisce la struttura del pacchetto ack*/
 typedef struct ACKPacket{
 
 	int type;
@@ -31,7 +33,7 @@ typedef struct ACKPacket{
 
 }ACKPacket;
 
-
+/*Gestisce i segnali per evitare un numero eccessivo di processi zombie*/
 void sighandler(int sign)
 {
 	(void)sign;
@@ -43,7 +45,20 @@ void sighandler(int sign)
 	return;
 }
 
-/* The given lost rate function */
+void handle_sigchild(struct sigaction* sa){
+
+	sa->sa_handler = sighandler;
+	sa->sa_flags = SA_RESTART;
+	sigemptyset(&sa->sa_mask);
+
+	if (sigaction(SIGCHLD, sa, NULL) == -1) {
+		fprintf(stderr, "Error in sigaction()\n");
+		exit(EXIT_FAILURE);
+	}
+}
+
+
+/* Stabilisce la casualità nella perdita di pacchetti per la simulazione*/
 int is_lost(float loss_rate) {
     double rv;
     rv = drand48();
@@ -55,22 +70,9 @@ int is_lost(float loss_rate) {
     }
 }
 
+/*Crea ed inizializza il socket*/
+void initialize_socket(int* sock_fd,struct sockaddr_in* s){
 
-void handle_sigchild(struct sigaction* sa){
-
-    sa->sa_handler = sighandler;
-    sa->sa_flags = SA_RESTART;
-    sigemptyset(&sa->sa_mask);
-
-    if (sigaction(SIGCHLD, sa, NULL) == -1) {
-        fprintf(stderr, "Error in sigaction()\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
-
-void initialize_socket(int* sock_fd,struct sockaddr_in* s)
-{
 	int sockfd;
 	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 		err_exit("errore in socket");
@@ -84,6 +86,7 @@ void initialize_socket(int* sock_fd,struct sockaddr_in* s)
 
 char stringa[128];
 
+/*Ascolta le richieste dai client*/
 char* listen_request(int sockfd, struct sockaddr_in* addr,socklen_t* len){
 
     struct sockaddr_in servaddr = *addr;
@@ -119,6 +122,7 @@ char* listen_request(int sockfd, struct sockaddr_in* addr,socklen_t* len){
     return stringa;
 }
 
+/*Invia la lista dei nomi dei file presenti nella cartella server*/
 char* list_file_server(){
 
 	FILE* proc = popen("ls", "r");
@@ -158,7 +162,8 @@ int check_existence(char* filename){
 
 }
 
-/* Creates and returns a segment Packet */
+/*Crea e restituisce un pacchetto ack*/
+
 struct ACKPacket createACKPacket (int ack_type, int base){
         struct ACKPacket ack;
         ack.type = ack_type;
@@ -166,6 +171,7 @@ struct ACKPacket createACKPacket (int ack_type, int base){
         return ack;
 }
 
+/*Crea e restituisce un pacchetto dati*/
 struct segmentPacket createDataPacket(int seqNO, int length, char* data){
 
 	struct segmentPacket pkd;
@@ -180,6 +186,7 @@ struct segmentPacket createDataPacket(int seqNO, int length, char* data){
 
 }
 
+/*Crea e restituisce il pacchetto finale del flusso di dati*/
 struct segmentPacket createFinalPacket(int seqNO, int length){
 
 	struct segmentPacket pkd;
@@ -193,7 +200,7 @@ struct segmentPacket createFinalPacket(int seqNO, int length){
 
 }
 
-//invoked with get commandinitiali
+/*Invia al client il file richiesto tramite comando get*/
 void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 	printf("Sono dentro a send_file_server\n");
@@ -376,7 +383,7 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 }
 
-//invoked with put command
+/*Riceve il file dal client tramite il comando put*/
 void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int loss_rate){
 
 
@@ -485,11 +492,8 @@ void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int l
 }
 
 
-/***************************************************************
-*Process tries receiving command 10 times; if no data 	       *
-*arrived, return. Process compare received command, and execute*
-*corresponding operation									   *
-****************************************************************/
+
+/*Gestisce le richieste dei client in base al comando inserito*/
 void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
 
 	struct sockaddr_in servaddr = *addr;
@@ -557,13 +561,7 @@ void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
 
 }
 
-
-/*************************************************************************************************
- * Child process waits on message queue; when father writes on queue, child executes		     *
- * client request. A child process executes 5 request, then terminates.							 *
- *************************************************************************************************/
-
-
+/*Effettua le operazioni relative al processo server figlio*/
 void child_job(pid_t pid, char* string){
 
 	(void)pid;
@@ -577,28 +575,7 @@ void child_job(pid_t pid, char* string){
 
 	initialize_socket(&sockfd,&addr);				//every child process creates a new socket
 
-	//manage_client(sockfd, string, &addr);	
-
-	if(strncmp(string, "list", 4) == 0){
-
-		printf("I am here\n");
-
-		char buff[BUFFER_SIZE];
-		strcpy(buff, list_file_server());
-
-		int n;
-		n = sendto(sockfd, buff, sizeof(buff), 0, (struct sockaddr *)&addr, sizeof(addr));
-		if(n < 0){
-
-			perror("Error while sending roba to client\n");
-			exit(1);
-
-		}
-
-		printf("JUst sent %d byte\n", n);
-
-
-	}
+	manage_client(sockfd, string, &addr);
 
 	exit(EXIT_SUCCESS);
 

@@ -16,6 +16,7 @@ int n_request = 0;
 extern int n_win;
 int adaptive;
 
+/*definisce la struttura del pacchetto dati*/
 typedef struct segmentPacket{
 
   int type;
@@ -25,6 +26,7 @@ typedef struct segmentPacket{
 
 }segmentPacket;
 
+/*definisce la struttura del pacchetto ack*/
 typedef struct ACKPacket{
 
   int type;
@@ -32,7 +34,7 @@ typedef struct ACKPacket{
 
 }ACKPacket;
 
-/* Creates and returns a segment Packet */
+/*Crea e restituisce un pacchetto ack*/
 struct ACKPacket createACKPacket (int ack_type, int base){
         struct ACKPacket ack;
         ack.type = ack_type;
@@ -40,6 +42,7 @@ struct ACKPacket createACKPacket (int ack_type, int base){
         return ack;
 }
 
+/*Crea e restituisce un pacchetto dati*/
 struct segmentPacket createDataPacket(int seqNO, int length, char* data){
 
   struct segmentPacket pkd;
@@ -54,6 +57,7 @@ struct segmentPacket createDataPacket(int seqNO, int length, char* data){
 
 }
 
+/*Crea e restituisce l'ultimo pacchetto del flusso di dati*/
 struct segmentPacket createFinalPacket(int seqNO, int length){
 
   struct segmentPacket pkd;
@@ -67,7 +71,7 @@ struct segmentPacket createFinalPacket(int seqNO, int length){
 
 }
 
-/* The given lost rate function */
+/*Stabilisce la casualità nella perdita di pacchetti per la simulazione*/
 int is_lost(float loss_rate) {
     double rv;
     rv = drand48();
@@ -79,6 +83,7 @@ int is_lost(float loss_rate) {
     }
 }
 
+/*Gestisce i segnali per evitare un numero eccessivo di processi zombie*/
 void sighandler(int sign)
 {
 	(void)sign;
@@ -87,13 +92,10 @@ void sighandler(int sign)
 
 	--n_request;
 
-
 	while ((pid = waitpid(WAIT_ANY, &status, WNOHANG)) > 0)
 		;
 	return;
 }
-
-
 
 void handle_sigchild(struct sigaction* sa)
 {
@@ -108,7 +110,7 @@ void handle_sigchild(struct sigaction* sa)
     }
 }
 
-
+/*Invia la richiesta di connessione al server*/
 int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *string){
 
     printf("Stampo il mio pid %d\n", getpid());
@@ -177,7 +179,7 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
     return 0;					/*not available server*/
 }
 
-//invoked with list command
+/*Stampa il nome dei file richiesti tramite comando list*/
 void list_file_client(int sockfd, struct sockaddr_in* serv){
 
   struct sockaddr_in s = *serv;
@@ -203,7 +205,7 @@ void list_file_client(int sockfd, struct sockaddr_in* serv){
 }
 
 
-//invoked with put command
+/*Ottiene il file richiesto dal server tramite il comando get*/
 void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int loss_rate){
 
   char dataBuffer[8192];
@@ -318,7 +320,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
 }
 
 
-//invoked with get command
+/*Invia il file desiderato al server tramite il comando put*/
 void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
 
   printf("Sono dentro a send_file_server\n");
@@ -486,8 +488,6 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
 
     alarm(0);
     tries = 0;
-
-
 
   }
 
