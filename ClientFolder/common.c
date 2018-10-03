@@ -75,11 +75,15 @@ char* read_from_stdin()
 off_t get_file_len(int fd)
 {
 	off_t len = lseek(fd,0,SEEK_END);		//get n. bytes file
-	if(len == -1)
-		err_exit("lseek");
+	if(len == -1){
+		perror("lseek");
+		exit(EXIT_FAILURE);
+	}
 
-	if(lseek(fd,0,SEEK_SET)  == -1)
-		err_exit("lseek");
+	if(lseek(fd,0,SEEK_SET)  == -1){
+		perror("lseek");
+		exit(EXIT_FAILURE);
+	}
 
 	return len;
 }
@@ -175,8 +179,10 @@ off_t conv_in_off_t(char data[])
 	errno = 0;
 	v = strtoul(data,&p,0);
 
-	if(errno != 0 || *p != '\0')
-		err_exit("strtoul");
+	if(errno != 0 || *p != '\0'){
+		perror("strtoul");
+		exit(EXIT_FAILURE);
+	}
 
 	ret = v;
 
@@ -212,8 +218,8 @@ void write_on_file(char buffer[],int fd, int n_bytes)
 			break;
 
 		v = write(fd,buffer+tot,n_bytes-tot);
-		if(v == -1)
-			perror("write");
+		if(v == -1))
+		perror("write");
 
 		tot+=v;
 	}
@@ -259,8 +265,10 @@ void initialize_fold(const char* directory) //se servDir non esiste la creo nell
 
 	if (stat(directory, &st) == -1){ //se non c'è la creo
 
-		if(mkdir(directory, 0700) == -1)
-			err_exit("mkdir\n");
+		if(mkdir(directory, 0700) == -1){
+			perror("mkdir");
+			exit(EXIT_FAILURE);
+		}
 	}
 	return;
 }
@@ -279,8 +287,10 @@ int create_file(char* filename,const char* directory) //scarica  file, se tutto 
 		if(errno == EEXIST){
 			return -1;
 		}
-		else
-			err_exit("open");
+		else{
+			perror("open");
+			exit(EXIT_FAILURE);
+		}
 	}else{
 		fflush(stdout);
 	}
@@ -302,8 +312,10 @@ int file_lock(int fd, int cmd)
 
 
 	result =fcntl(fd, F_SETLKW, &fl);
-	if(result == -1)
-		err_exit("fcntl");
+	if(result == -1){
+		perror("fcntl");
+		exit(EXIT_FAILURE);
+	}
 	return result;
 }
 
@@ -312,7 +324,8 @@ int locked_file(int fd)
 {
 	struct flock fd_lock = {F_RDLCK, SEEK_SET,   0,      0,     0 };
 	if(fcntl(fd, F_GETLK, &fd_lock) == -1) {
-		err_exit("fcntl");
+			perror("fcntl");
+			exit(EXIT_FAILURE);
 	}
 	if(fd_lock.l_type == F_UNLCK)
 		return 0;
