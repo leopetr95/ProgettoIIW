@@ -124,14 +124,6 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
 
     char temp_buff[128];
 
-
-    /******************************************************************
-     * Process tries to connect to server and generates a random int; *
-     * timeout on recvfrom is setted; if no response received,        *
-     * timeout is increased; if no response for 3 times, process      *
-     * returns.                                                       *
-     ******************************************************************/
-
     for(;;){
     	if(sendto(sockfd, string, 512, 0, (struct sockaddr *)&s,sizeof(s)) < 0){
     		printf("errore\n");

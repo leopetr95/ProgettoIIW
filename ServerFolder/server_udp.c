@@ -2,9 +2,7 @@
 #include "configurations.h"
 #include "data_types.h"
 #include "common.h"
-#include "timer_functions.h"
-#include "packet_functions.h"
-#include "window_operations.h"
+
 
 #define BUFFER_SIZE 1200
 
