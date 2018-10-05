@@ -1,11 +1,7 @@
-#include "basic.h"
 #include "configurations.h"
+#include "basic.h"
 #include "data_types.h"
 #include "common.h"
-#include "thread_functions.h"
-#include "timer_functions.h"
-#include "packet_functions.h"
-#include "window_operations.h"
 
 #define BUFFERSIZE 1000
 #define WINDOWSIZE 4
@@ -97,7 +93,8 @@ void sighandler(int sign)
 	return;
 }
 
-void handle_sigchild(struct sigaction* sa){
+void handle_sigchild(struct sigaction* sa)
+{
 
     sa->sa_handler = sighandler;
     sa->sa_flags = SA_RESTART;
@@ -123,26 +120,26 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
 
     char temp_buff[128];
 
-    for(;;){
-
-    	if(sendto(sockfd, string, 512, 0, (struct sockaddr *)&s,sizeof(s)) < 0){
-    		printf("errore\n");
-    		err_exit("sendto\n");
-    	}
-
-    	printf("richiesta inviata\n");
-
-    	if(setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0)
-    		err_exit("setsockopt failed\n");
-
-    	n = recvfrom(sockfd,temp_buff,sizeof(temp_buff),0,(struct sockaddr*)&s,&len);
-
-        if(n < 0){
-
-            perror("Error while receiving from\n");
-            exit(1);
-
+    for(;;) {
+        if (sendto(sockfd, string, 512, 0, (struct sockaddr *) &s, sizeof(s)) < 0) {
+            printf("errore\n");
+            perror("sendto\n");
+            exit(EXIT_FAILURE);
         }
+
+        printf("richiesta inviata\n");
+
+        if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *) &conn_time, sizeof(conn_time)) < 0){
+            perror("setsockopt failed\n");
+            exit(EXIT_FAILURE);
+        }
+        n = recvfrom(sockfd,temp_buff,sizeof(temp_buff),0,(struct sockaddr*)&s,&len);
+      if(n < 0){
+
+        perror("Error while receiving from\n");
+        exit(EXIT_FAILURE);
+
+      }
 
       printf("printo n%d\n", n);
 
@@ -155,15 +152,17 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
     			conn_time.tv_sec += conn_time.tv_sec;
     		}
     		else
-    			err_exit("recvfrom");
+    			perror("recvfrom");
     	}
     	if(n>0){
 
         printf("Stampo sta roba %s\n", temp_buff);
     		conn_time.tv_sec = 0;
     		conn_time.tv_nsec = 0;
-        	if(setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0)
-        		err_exit("setsockopt failed\n");
+        	if(setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0){
+                perror("setsockopt failed\n");
+                exit(EXIT_FAILURE);
+            }
     		printf("client connected!\n");
     	    *addr = s;
     	    return 1;
@@ -187,7 +186,7 @@ void list_file_client(int sockfd, struct sockaddr_in* serv){
   if(n < 0){
 
     perror("Error while receving from socket\n");
-    exit(1);
+    exit(EXIT_FAILURE);
 
   }
 
@@ -208,15 +207,17 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
   int seqNum = 0;
   socklen_t len = sizeof(servaddr);
 
+
   printf("let me first print the name of the required file %s\n", comm+4);
 
   FILE* file = fopen(comm+4, "w+");
   if(file == NULL){
 
     perror("Error while opening file\n");
-    exit(1);
+    exit(EXIT_FAILURE);
 
   }
+
 
   while(1){
 
@@ -227,7 +228,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
     if(recvMsgSize < 0){
 
       perror("Error while receiving from\n");
-      exit(1);
+      exit(EXIT_FAILURE);
 
 
     }
@@ -272,7 +273,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
         if(sendto(sockfd, &ack, sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))!= sizeof(ack)){
 
           perror("Error while sending to\n");
-          exit(1);
+          exit(EXIT_FAILURE);
 
         }
 
@@ -285,7 +286,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
         if(sendto(sockfd, &ack , sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))!= sizeof(ack)){
 
           perror("Error while sending to\n");
-          exit(1);
+          exit(EXIT_FAILURE);
 
         }
 
@@ -322,7 +323,7 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
   if(file == NULL){
 
     perror("Error while opening file\n");
-    exit(1);
+    exit(EXIT_FAILURE);
 
   }
 
@@ -379,7 +380,7 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
       if(sendto(sockfd, &dataPacket, sizeof(dataPacket), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))<0){
 
         perror("Error while sending packet\n");
-        exit(1);
+        exit(EXIT_FAILURE);
 
       }
 
@@ -434,7 +435,7 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
             if(sendto(sockfd, &dataPacket, sizeof(dataPacket), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))<0){
 
               perror("Error while sending to socket\n");
-              exit(1);
+              exit(EXIT_FAILURE);
 
             }
 
@@ -454,7 +455,7 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
       }else{
 
         perror("Error while recvrom\n");
-        exit(1);
+        exit(EXIT_FAILURE);
 
       }
 
@@ -493,11 +494,12 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
 int main(int argc, char *argv[]) {
 
   int sockfd;
-  struct sockaddr_in servaddr;
+  struct sockaddr_in   servaddr;
   Header p;
   struct sigaction sa;
 
   handle_sigchild(&sa);
+
 
   if (argc < 3) {
     fprintf(stderr, "utilizzo: daytime_clientUDP <indirizzo IP  server> lossrate\n");
@@ -507,16 +509,20 @@ int main(int argc, char *argv[]) {
   int lossrate = atof(argv[2]);
 
   if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* crea il socket   */
-	  err_exit("socket");
-   }
+	  perror("socket");
+      exit(EXIT_FAILURE);
+  }
 
    memset((void *)&servaddr, 0, sizeof(servaddr));
    servaddr.sin_family = AF_INET;
    servaddr.sin_port = htons(SERVPORT);
 
    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) < 0) {
-        err_exit("error in inet_pton for %s");
+        perror("error in inet_pton for %s");
+        exit(EXIT_FAILURE);
+
    }
+
 
   pid_t pid;
   char* line;
@@ -530,8 +536,7 @@ int main(int argc, char *argv[]) {
 
 
   while(feof(stdin) == 0){
-
-	  ssize_t len_line;
+	  //ssize_t len_line;
 	  char comm[512];
 
 	  printf("write command\n");
@@ -549,8 +554,10 @@ int main(int argc, char *argv[]) {
 		  continue;
 
 	  if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* create new socket   */
-		   err_exit("socket");
-	  }
+		   perror("socket");
+		   exit(EXIT_FAILURE);
+
+      }
 
 	  if(!request_to_server(sockfd,&p,&servaddr, line)){
 		  printf("not available server\n");
@@ -580,9 +587,11 @@ int main(int argc, char *argv[]) {
 	  }else if(strncmp(comm, "list", 4) == 0){
 
 	  	list_file_client(sockfd, &servaddr);
+      printf("io sto qua\n");
 	  	break;
 
 	  }
+
 
 	  else{
 
