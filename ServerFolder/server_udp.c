@@ -12,7 +12,6 @@
 #define CHUNCK 512
 #define WINDOWSIZE 4
 #define TIMEOUT 3
-
 extern int n_win;
 int adaptive;
 
