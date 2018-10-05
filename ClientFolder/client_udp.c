@@ -1,5 +1,5 @@
-#include "configurations.h"
 #include "basic.h"
+#include "configurations.h"
 #include "data_types.h"
 #include "common.h"
 #include "thread_functions.h"
@@ -97,8 +97,7 @@ void sighandler(int sign)
 	return;
 }
 
-void handle_sigchild(struct sigaction* sa)
-{
+void handle_sigchild(struct sigaction* sa){
 
     sa->sa_handler = sighandler;
     sa->sa_flags = SA_RESTART;
@@ -125,22 +124,25 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
     char temp_buff[128];
 
     for(;;){
+
     	if(sendto(sockfd, string, 512, 0, (struct sockaddr *)&s,sizeof(s)) < 0){
     		printf("errore\n");
     		err_exit("sendto\n");
     	}
 
-      printf("richiesta inviata\n");
+    	printf("richiesta inviata\n");
 
     	if(setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0)
     		err_exit("setsockopt failed\n");
+
     	n = recvfrom(sockfd,temp_buff,sizeof(temp_buff),0,(struct sockaddr*)&s,&len);
-      if(n < 0){
 
-        perror("Error while receiving from\n");
-        exit(1);
+        if(n < 0){
 
-      }
+            perror("Error while receiving from\n");
+            exit(1);
+
+        }
 
       printf("printo n%d\n", n);
 
@@ -206,7 +208,6 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
   int seqNum = 0;
   socklen_t len = sizeof(servaddr);
 
-
   printf("let me first print the name of the required file %s\n", comm+4);
 
   FILE* file = fopen(comm+4, "w+");
@@ -216,7 +217,6 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
     exit(1);
 
   }
-
 
   while(1){
 
@@ -493,12 +493,11 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
 int main(int argc, char *argv[]) {
 
   int sockfd;
-  struct sockaddr_in   servaddr;
+  struct sockaddr_in servaddr;
   Header p;
   struct sigaction sa;
 
   handle_sigchild(&sa);
-
 
   if (argc < 3) {
     fprintf(stderr, "utilizzo: daytime_clientUDP <indirizzo IP  server> lossrate\n");
@@ -519,7 +518,6 @@ int main(int argc, char *argv[]) {
         err_exit("error in inet_pton for %s");
    }
 
-
   pid_t pid;
   char* line;
 
@@ -532,7 +530,8 @@ int main(int argc, char *argv[]) {
 
 
   while(feof(stdin) == 0){
-	  //ssize_t len_line;
+
+	  ssize_t len_line;
 	  char comm[512];
 
 	  printf("write command\n");
@@ -581,11 +580,9 @@ int main(int argc, char *argv[]) {
 	  }else if(strncmp(comm, "list", 4) == 0){
 
 	  	list_file_client(sockfd, &servaddr);
-      printf("io sto qua\n");
 	  	break;
 
 	  }
-
 
 	  else{
 

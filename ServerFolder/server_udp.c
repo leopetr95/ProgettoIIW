@@ -2,7 +2,10 @@
 #include "configurations.h"
 #include "data_types.h"
 #include "common.h"
-
+#include "thread_functions.h"
+#include "timer_functions.h"
+#include "packet_functions.h"
+#include "window_operations.h"
 
 #define BUFFER_SIZE 1200
 
@@ -317,7 +320,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 							dataPacket = createDataPacket(seqNum, dataLenght, data);
 							printf("Sending packet: %d\n", seqNum);
 
-
 						}
 
 						if(sendto(sockfd, &dataPacket, sizeof(dataPacket), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))<0){
@@ -329,16 +331,13 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 						seqNum++;
 
-
 					}
 
 					alarm(TIMEOUT);
 
-
 				}
 
 				tries++;
-
 
 			}else{
 
@@ -346,7 +345,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 				exit(1);
 
 			}
-
 
 		}
 
@@ -612,7 +610,7 @@ int main(int argc, char **argv){
 	  	pid_t pid;
 	  	pid = fork();
 
-	  	if(pid > 0){
+	  	if(pid == 0){
 
 	  		printf("sono il figlio con pid %d\n", getpid());
 	  		child_job(getpid(), ret);

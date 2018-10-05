@@ -9,13 +9,11 @@
 #define SERVPORT 5194
 #include "data_types.h"
 
-
 void err_exit(char* str)
 {
     perror(str);
     exit(EXIT_FAILURE);
 }
-
 
 int convert_in_int(char* str)
 {
@@ -28,9 +26,6 @@ int convert_in_int(char* str)
 		return -1;
 	return v;
 }
-
-
-
 
 int open_file(char* filename,int flags)
 {

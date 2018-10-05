@@ -20,5 +20,5 @@ add_executable(NuovoProgetto
         ServerFolder/common.h
         ServerFolder/configurations.h
         ServerFolder/data_types.h
-        ServerFolder/server_udp.c
-        )
+ServerFolder/server_udp.c
+)
