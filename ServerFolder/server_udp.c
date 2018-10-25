@@ -15,6 +15,11 @@
 extern int n_win;
 int adaptive;
 
+sem_t *sem;
+int *available_proc;
+
+void child_job(int queue_id, int shm_id, pid_t pid);
+
 /*Definisce la struttura del pacchetto dati*/
 typedef struct segmentPacket{
 
@@ -55,6 +60,9 @@ void handle_sigchild(struct sigaction* sa){
 		fprintf(stderr, "Error in sigaction()\n");
 		exit(EXIT_FAILURE);
 	}
+
+	sem_close(sem);
+	sem_unlink("sem");
 }
 
 
@@ -70,15 +78,73 @@ int is_lost(float loss_rate) {
     }
 }
 
+int create_queue(){
+
+	key_t key = ftok(".", 'a');
+	if(key == -1){
+
+		error("Errore nella ftok queue\n");
+
+	}
+
+	int ret = msgget(key, IPC_CREAT | 0666);
+	if(ret == -1){
+
+		error("Errore nella msgget\n");
+
+	}
+
+	return ret;
+
+}
+
+int create_shared_mem(){
+
+	key_t key = ftok(".", 'b');
+	if(key == -1){
+
+		error("Errore nella ftok shared memory\n");
+
+	}
+
+	int ret = shmget(key, sizeof(int), IPC_CREAT | 0666);
+	if(ret == -1){
+
+		error("Errore nella shmget\n");
+
+	}
+
+	return ret;
+
+}
+
+void write_queue(int queue_id, struct sockaddr_in addr, segmentPacket seg, char* ret){
+
+	struct msgbuf msg;
+	msg.s = addr;
+	strcpy(msg.message, ret);
+	size_t size = sizeof(struct sockaddr_in) + sizeof(int);
+	msg.mtype = 1;
+	msg.client_seq = seg.seq_no;
+
+	int msgret = msgsnd(queue_id, &msg, size, 0);
+	if(msgret == -1){
+
+		error("Errore in msgsnd\n");
+
+	}
+
+}
+
 /*Crea ed inizializza il socket*/
 void initialize_socket(int* sock_fd,struct sockaddr_in* s){
 
 	int sockfd;
 	if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
-		err_exit("errore in socket");
+		error("errore in socket");
 
 	if (bind(sockfd, (struct sockaddr *)s, sizeof(*s)) < 0)
-		err_exit("error in bind");
+		error("error in bind");
 	*sock_fd = sockfd;
 
 }
@@ -87,39 +153,26 @@ void initialize_socket(int* sock_fd,struct sockaddr_in* s){
 char stringa[128];
 
 /*Ascolta le richieste dai client*/
-char* listen_request(int sockfd, struct sockaddr_in* addr,socklen_t* len){
+char* listen_request(int sockfd, segmentPacket* seg, struct sockaddr_in* addr,socklen_t* len){
 
     struct sockaddr_in servaddr = *addr;
     socklen_t l = *len;
     l = sizeof(servaddr);
-    printf("listening request\n");
 
-    int n = recvfrom(sockfd, stringa, 128, 0, (struct sockaddr *)&servaddr, &l);
-    printf("Stampo n: %s\n", stringa);
+    int n = recvfrom(sockfd, stringa, sizeof(stringa), 0, (struct sockaddr *)&servaddr, &l);
          	
+    printf("Stampo. %s\n", seg->data);
+
     if(n < 0){
 
-         err_exit("recvfrom\n");
+         error("recvfrom\n");
 
      }
-
-    printf("Something received\n");
-
-    char *ack = "ACK";
-
-    n = sendto(sockfd, ack, sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr));
-    if(n < 0){
-
-    	err_exit("sendto\n");
-    	exit(1);
-
-    }
-
-    printf("Io qualcosa ho mandato: %d\n", n);
 
     *addr = servaddr;
     *len = l;
     return stringa;
+
 }
 
 /*Invia la lista dei nomi dei file presenti nella cartella server*/
@@ -165,6 +218,7 @@ int check_existence(char* filename){
 /*Crea e restituisce un pacchetto ack*/
 
 struct ACKPacket createACKPacket (int ack_type, int base){
+
         struct ACKPacket ack;
         ack.type = ack_type;
         ack.ack_no = base;
@@ -199,6 +253,72 @@ struct segmentPacket createFinalPacket(int seqNO, int length){
 	return pkd;
 
 }
+
+void prefork(int queue_id, int shm_id){
+
+	pid_t pid;
+
+	for(int i = 0; i < 10; i++){
+
+		pid = fork();
+		if(pid == -1){
+
+			error("Errore nella fork\n");
+
+		}else if(pid == 0){
+
+			child_job(queue_id, shm_id, getpid());
+
+		}
+
+	}
+
+	return; 
+
+}
+
+/*void new_fork(int queue_id, int shm_id, sem_t sem){
+
+	pid_t pid;
+
+	for(int i = 0; i < 5; i++){
+
+		pid = fork();
+		if(pid == -1){
+
+			error("Errore nella fork()\n");
+
+		}else if(pid == 0){
+
+			available_proc = shmat(shm_id, NULL, 0);
+
+			if(available_proc == (void*)-1){
+
+				error("Errore nella shmat\n");
+
+			}		
+
+			if(sem_wait(sem) < 0){
+
+					error("Errore nella semwait\n");
+
+			}
+
+			available_proc++;
+
+			if(sem_post(sem) < 0){
+
+				error("Errore nella sempost\n");
+
+			}
+
+			child_job(queue_id, shm_id, getpid(), "asdas");
+
+		}
+
+	}
+
+}*/
 
 /*Invia al client il file richiesto tramite comando get*/
 void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
@@ -489,20 +609,15 @@ void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int l
 
 
 /*Gestisce le richieste dei client in base al comando inserito*/
-void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
+void manage_client(int sockfd, char* message, struct sockaddr_in* addr){
 
 	struct sockaddr_in servaddr = *addr;
 
-	printf("Il mio pid è: %d\n", getpid());
-	printf("The string is %s\n", string);
+	if(strncmp(message, "put", 3) == 0){
 
-    char comm[30];
+		printf("Sono in put\n");
 
-    strcpy(comm, string);
-
-	if(strncmp(comm, "put", 3) == 0){
-
-		int ret = check_existence(comm + 4);
+		int ret = check_existence(message + 4);
 		if(ret == 0){
 
 			printf("File does not exists, I can receive it\n");
@@ -515,14 +630,16 @@ void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
 
 	}
 
-	else if((strncmp(comm,"get",3) == 0)  ){
+	else if((strncmp(message,"get",3) == 0)  ){
+
+		printf("Sono in get\n");
 
 		char cwd[512];
 		getcwd(cwd, sizeof(cwd));
 
 		int ret;
 
-		ret = check_existence(comm+4);
+		ret = check_existence(message + 4);
 		if(ret == 0){
 
 			perror("File does not exists\n");
@@ -530,11 +647,12 @@ void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
 
 		}
 
-		send_file_server(comm + 4,sockfd, servaddr);
+		send_file_server(message + 4,sockfd, servaddr);
 
-	}else if(strncmp(comm, "list", 4) == 0){
+	}else if(strncmp(message, "list", 4) == 0){
 
-		printf("hi\n");
+
+		printf("Sono in list\n");
 
 		char buff[BUFFER_SIZE];
 		strcpy(buff,list_file_server());
@@ -557,20 +675,52 @@ void manage_client(int sockfd, char* string, struct sockaddr_in* addr){
 }
 
 /*Effettua le operazioni relative al processo server figlio*/
-void child_job(pid_t pid, char* string){
+void child_job(int queue_id, int shm_id, pid_t pid){
 
-	(void)pid;
+	printf("Sono in child job\n");
+
 	struct sockaddr_in addr;
 	int sockfd;
 
-	memset((void *)&addr,0, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(5000);
+	struct msgbuf msg;
+	msg.mtype = 1;
 
-	initialize_socket(&sockfd,&addr);				//every child process creates a new socket
+	available_proc = shmat(shm_id, NULL, 0);
+	if(available_proc == (void*)-1){
 
-	manage_client(sockfd, string, &addr);
+		error("Errore nella shmat\n");
+
+	}	
+
+	while(1){
+
+		int ret = msgrcv(queue_id, &msg, sizeof(struct sockaddr_in) + sizeof(int) + 20, 1, 0);
+		if(ret == -1){
+
+			error("Errore in msgrcv\n");
+
+		}
+
+		printf("Stampo il messaggio da child %s\n", msg.message);
+
+		sem_wait(sem);
+		--available_proc;
+		sem_post(sem);
+
+		memset((void *)&addr,0, sizeof(addr));
+		addr.sin_family = AF_INET;
+		addr.sin_addr.s_addr = htonl(INADDR_ANY);
+		addr.sin_port = htons(0);
+
+		initialize_socket(&sockfd,&addr);				//every child process creates a new socket
+
+		manage_client(sockfd, msg.message, &addr);
+
+		sem_wait(sem);
+		++available_proc;
+		sem_post(sem);
+
+	}
 
 	exit(EXIT_SUCCESS);
 
@@ -584,49 +734,54 @@ int main(int argc, char **argv){
   socklen_t len;
   struct sockaddr_in addr;
   struct sigaction sa;
+  segmentPacket seg;
 
-  handle_sigchild(&sa);					/*handle SIGHCLD to avoid zombie processes*/
+  int queue_id, shm_id;
+
+  handle_sigchild(&sa);		/*handle SIGHCLD to avoid zombie processes*/
+
+  queue_id = create_queue();
+
+  shm_id = create_shared_mem();
+
+  sem = sem_open("sem", O_CREAT | O_EXCL, 0666, 1);
+  if(sem == SEM_FAILED){
+
+  	error("Errore in sem_open\n");
+
+  }
+
+  prefork(queue_id, shm_id);
 
   if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)		//create listen socket
-      err_exit("errore in socket");
+      error("errore in socket");
 
   addr.sin_family = AF_INET;
   addr.sin_port = htons(SERVPORT);
-  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-   if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+  if(bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+
      perror("errore in bind\n");
      exit(1);
-   }
+
+  }
 
   while(1){
 
-	  char *ret = listen_request(sockfd,&addr,&len);
-	  printf("Stampo: %s\n", ret);
-	  if(ret != NULL){
+	char *ret = listen_request(sockfd, &seg, &addr, &len);
 
-	  	printf("Ciaone\n");
-	  	pid_t pid;
-	  	pid = fork();
+	write_queue(queue_id, addr, seg, ret);
 
-	  	if(pid == 0){
+	/*if(available_proc < 5){i
 
-	  		printf("sono il figlio con pid %d\n", getpid());
-	  		child_job(getpid(), ret);
-	  		break;
+		new_fork(queue_id, shm_id);
 
-	  	}else if(pid < 0){
-
-	  		perror("Error while creating process\n");
-	  		exit(1);
-
-	  	}
-
-
-	  }
+	}*/
 	  
   }
 
   wait(NULL);
   return 0;
+
 }

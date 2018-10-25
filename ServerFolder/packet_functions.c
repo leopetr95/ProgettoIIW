@@ -28,7 +28,7 @@ int receive_packet(int sockfd,Header* p,struct sockaddr_in* servaddr)
 				continue;
 			}
 			else
-				err_exit("recvfrom");
+				error("recvfrom");
 		}
 		else
 			break;
@@ -45,7 +45,7 @@ void send_packet(int sock_fd,struct sockaddr_in servaddr,Header* p,int probabili
 
 	if(x>probability){
 		if(sendto(sock_fd,p,sizeof(Header), 0, (struct sockaddr *)&servaddr,sizeof(servaddr)) < 0)
-			err_exit("sendto\n");
+			error("sendto\n");
 	}
 }
 
@@ -60,7 +60,7 @@ void send_ack(int sockfd,Header p,struct sockaddr_in servaddr,int probability,in
 	long x = rand()%100 + 1;
 	if(x > probability){
 		if(sendto(sockfd,&p,sizeof(Header),0,(struct sockaddr *)&servaddr,sizeof(servaddr)) < 0)
-			err_exit("sendto\n");
+			error("sendto\n");
 	}
 }
 
@@ -77,7 +77,7 @@ int receive_cmd_ack(int sockfd,Header* p,struct sockaddr_in* servaddr)
 			result = 0;
 		}
 		else
-			err_exit("recvfrom");
+			error("recvfrom");
 	}
 	else
 		result = 1;
@@ -101,7 +101,7 @@ int receive_command(int sockfd,char comm[],Header* r,struct sockaddr* servaddr)
     		result = 0;
     	}
         else
-        	err_exit("recvfrom");
+        	error("recvfrom");
     }
     else{
     	result = 1;

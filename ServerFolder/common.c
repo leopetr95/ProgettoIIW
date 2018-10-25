@@ -10,12 +10,12 @@
 #include "data_types.h"
 
 
-void err_exit(char* str)
-{
-    perror(str);
-    exit(EXIT_FAILURE);
-}
+void error(char *str){
 
+	perror(str);
+	exit(-1);
+
+}
 
 int convert_in_int(char* str)
 {
@@ -36,7 +36,7 @@ int open_file(char* filename,int flags)
 {
 	int fd;
 	if((fd = open(filename, flags)) == -1){
-		err_exit("open");
+		error("open");
 	}
 	return fd;
 
@@ -46,7 +46,7 @@ int open_file(char* filename,int flags)
 void close_file(int fd)
 {
 	if(close(fd) == -1)
-		err_exit("closing file");
+		error("closing file");
 }
 
 
@@ -56,14 +56,14 @@ char* read_from_stdin()
 {
 	char* line = malloc(MAXLINE*sizeof(char));
 	if(line == NULL)
-		err_exit("malloc");
+		error("malloc");
 	line = fgets(line,MAXLINE,stdin);
 	if(line == NULL){
 		if(errno == EINTR)
 			printf("eintr\n");
 		if(feof(stdin))
 			return NULL;
-		err_exit("fgets");
+		error("fgets");
 	}
 	if(line[strlen(line) - 1] == '\n')
 		line[strlen(line) - 1] = '\0';
@@ -76,10 +76,10 @@ off_t get_file_len(int fd)
 {
 	off_t len = lseek(fd,0,SEEK_END);		//get n. bytes file
 	if(len == -1)
-		err_exit("lseek");
+		error("lseek");
 
 	if(lseek(fd,0,SEEK_SET)  == -1)
-		err_exit("lseek");
+		error("lseek");
 
 	return len;
 }
@@ -105,13 +105,11 @@ void initialize_addr(struct sockaddr_in* s)
 }
 
 
-
-
 char* write_pathname(int len,const char*path,char*filename)
 {
 	char* buffer = malloc(len*sizeof(char));
 	if(buffer == NULL)
-		err_exit("malloc");
+		error("malloc");
 	unsigned int i;
 
 	for(i=0;i<strlen(path);i++){
@@ -176,7 +174,7 @@ off_t conv_in_off_t(char data[])
 	v = strtoul(data,&p,0);
 
 	if(errno != 0 || *p != '\0')
-		err_exit("strtoul");
+		error("strtoul");
 
 	ret = v;
 
@@ -260,7 +258,7 @@ void initialize_fold(const char* directory) //se servDir non esiste la creo nell
 	if (stat(directory, &st) == -1){ //se non c'è la creo
 
 		if(mkdir(directory, 0700) == -1)
-			err_exit("mkdir\n");
+			error("mkdir\n");
 	}
 	return;
 }
@@ -280,7 +278,7 @@ int create_file(char* filename,const char* directory) //scarica  file, se tutto 
 			return -1;
 		}
 		else
-			err_exit("open");
+			error("open");
 	}else{
 		fflush(stdout);
 	}
@@ -303,7 +301,7 @@ int file_lock(int fd, int cmd)
 
 	result =fcntl(fd, F_SETLKW, &fl);
 	if(result == -1)
-		err_exit("fcntl");
+		error("fcntl");
 	return result;
 }
 
@@ -312,7 +310,7 @@ int locked_file(int fd)
 {
 	struct flock fd_lock = {F_RDLCK, SEEK_SET,   0,      0,     0 };
 	if(fcntl(fd, F_GETLK, &fd_lock) == -1) {
-		err_exit("fcntl");
+		error("fcntl");
 	}
 	if(fd_lock.l_type == F_UNLCK)
 		return 0;

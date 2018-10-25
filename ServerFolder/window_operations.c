@@ -17,10 +17,10 @@ void initialize_window(Window** w,char c)
 		flag = 1;
 	window = malloc(sizeof(Window));
 	if(window == NULL)
-		err_exit("malloc");
+		error("malloc");
 	window->win = malloc((n_win+1)*sizeof(Header));
 	if(window->win == NULL)
-		err_exit("malloc");
+		error("malloc");
 	window->E = window->S = window->end = 0;
 	int j;
 	for(j = 0; j < n_win+1; j++)
@@ -104,7 +104,7 @@ void read_and_insert(Window* w,off_t len,int* tot_read,int fd,int seq)
 {
 	char* buffer = malloc(MAXLINE*sizeof(char));
 	if(buffer == NULL)
-		err_exit("malloc");
+		error("malloc");
 	int n_bytes = get_n_bytes(len,*tot_read);
 	int r = read_file(buffer,fd,n_bytes);
 	*tot_read = *tot_read + r;

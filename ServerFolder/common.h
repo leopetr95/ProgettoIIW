@@ -5,7 +5,7 @@
 #include "data_types.h"
 
 
-void err_exit(char* str);
+void error(char* str);
 int convert_in_int(char* str);
 int open_file(char* filename,int flags);
 void close_file(int fd);

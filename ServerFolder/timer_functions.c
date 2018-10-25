@@ -16,7 +16,7 @@ void start_socket_timeout(int* sockfd,int attempts)
 		conn_time.tv_sec = 5*attempts;
 	int sock = *sockfd;
 	if(setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0)
-	    err_exit("setsockopt failed\n");
+	    error("setsockopt failed\n");
 }
 
 
@@ -25,7 +25,7 @@ void reset_socket_timeout(int* sockfd)
 	struct timespec conn_time = {0,0};
 	int sock = *sockfd;
 	if(setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0)
-	    err_exit("setsockopt failed\n");
+	    error("setsockopt failed\n");
 }
 
 
@@ -37,7 +37,7 @@ void start_timer(struct timespec* time)
 
 
 	if(clock_gettime(CLOCK_MONOTONIC_RAW,time) == -1)
-		err_exit("clock gettime\n");
+		error("clock gettime\n");
 }
 
 

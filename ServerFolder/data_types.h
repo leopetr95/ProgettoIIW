@@ -28,6 +28,7 @@ typedef struct{
 struct msgbuf{
 	long mtype;
 	int client_seq;
+	char message[20];
 	struct sockaddr_in s;
 };
 
