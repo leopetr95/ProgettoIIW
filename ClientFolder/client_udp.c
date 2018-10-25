@@ -107,7 +107,7 @@ void handle_sigchild(struct sigaction* sa)
 }
 
 /*Invia la richiesta di connessione al server*/
-int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *string){
+int request_to_server(int sockfd, segmentPacket* seg,struct sockaddr_in* addr, char *string){
 
     printf("Stampo il mio pid %d\n", getpid());
 
@@ -116,57 +116,68 @@ int request_to_server(int sockfd,Header* x,struct sockaddr_in* addr, char *strin
     struct timespec conn_time = {2,0};
     int attempts = 0;
     socklen_t len = sizeof(s);
-    x->n_seq = generate_casual();
+    seg->seq_no = generate_casual();
 
     char temp_buff[128];
 
     for(;;) {
+
+        //invio richiesta
         if (sendto(sockfd, string, 512, 0, (struct sockaddr *) &s, sizeof(s)) < 0) {
-            printf("errore\n");
-            perror("sendto\n");
+
+            perror("Erroer in sendto\n");
             exit(EXIT_FAILURE);
+
         }
 
         printf("richiesta inviata\n");
 
+        //impostazione timeout
         if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *) &conn_time, sizeof(conn_time)) < 0){
             perror("setsockopt failed\n");
             exit(EXIT_FAILURE);
         }
-        n = recvfrom(sockfd,temp_buff,sizeof(temp_buff),0,(struct sockaddr*)&s,&len);
-      if(n < 0){
 
-        perror("Error while receiving from\n");
-        exit(EXIT_FAILURE);
+        //ricezione ack
+        n = recvfrom(sockfd, seg,sizeof(seg),0,(struct sockaddr*)&s,&len);
 
-      }
+        printf("printo n%d\n", n);
 
-      printf("printo n%d\n", n);
+        //controllo tentativi
+    	  if(n < 0){
+    		  if(errno == EWOULDBLOCK){
+    			   printf("server not responding; trying again..\n");
+    			   ++attempts;
+    			   if(attempts == 3){
+    				    break;
+             }
+    			   conn_time.tv_sec += conn_time.tv_sec;
+    		  }
+    		  else{
+    			   perror("recvfrom");
+          }
+    	  }
 
-    	if(n < 0){
-    		if(errno == EWOULDBLOCK){
-    			printf("server not responding; trying again..\n");
-    			++attempts;
-    			if(attempts == 3)
-    				break;
-    			conn_time.tv_sec += conn_time.tv_sec;
-    		}
-    		else
-    			perror("recvfrom");
-    	}
-    	if(n>0){
+      //ack ricevuto
+    	if(n > 0){
 
         printf("Stampo sta roba %s\n", temp_buff);
     		conn_time.tv_sec = 0;
     		conn_time.tv_nsec = 0;
-        	if(setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0){
-                perror("setsockopt failed\n");
-                exit(EXIT_FAILURE);
-            }
+        if(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&conn_time,sizeof(conn_time)) < 0){
+
+            perror("setsockopt failed\n");
+            exit(EXIT_FAILURE);
+
+        }
+
     		printf("client connected!\n");
-    	    *addr = s;
-    	    return 1;
+
+    	  *addr = s;
+    	  return 1;
+
     	}
+
     }
 
     return 0;					/*not available server*/
@@ -281,7 +292,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
       }else if(base == -1){
 
         printf("Received teardown packet\n");
-        printf("Sending terminale ack\n",base);
+        printf("Sending terminale ack\n");
 
         if(sendto(sockfd, &ack , sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))!= sizeof(ack)){
 
@@ -314,7 +325,7 @@ void get_file_client(int sockfd, char* comm, struct sockaddr_in* servaddr, int l
 
 
 /*Invia il file desiderato al server tramite il comando put*/
-void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
+/*void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
 
   printf("Sono dentro a send_file_server\n");
 
@@ -488,29 +499,32 @@ void send_file_client(char *filename, int sockfd, struct sockaddr_in servaddr){
   exit(0);
 
 
-}
+}*/
 
 
 int main(int argc, char *argv[]) {
 
   int sockfd;
-  struct sockaddr_in   servaddr;
-  Header p;
+  struct sockaddr_in servaddr;
+  segmentPacket p;
   struct sigaction sa;
 
   handle_sigchild(&sa);
 
+  if (argc < 3){
 
-  if (argc < 3) {
     fprintf(stderr, "utilizzo: daytime_clientUDP <indirizzo IP  server> lossrate\n");
     exit(1);
+
   }
 
   int lossrate = atof(argv[2]);
 
-  if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* crea il socket   */
+  if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* crea il socket   */
+
 	  perror("socket");
-      exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
+
   }
 
    memset((void *)&servaddr, 0, sizeof(servaddr));
@@ -518,11 +532,11 @@ int main(int argc, char *argv[]) {
    servaddr.sin_port = htons(SERVPORT);
 
    if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) < 0) {
+
         perror("error in inet_pton for %s");
         exit(EXIT_FAILURE);
 
    }
-
 
   pid_t pid;
   char* line;
@@ -533,8 +547,6 @@ int main(int argc, char *argv[]) {
    * waits all children; then, father terminates.               *
    *************************************************************/
 
-
-
   while(feof(stdin) == 0){
 	  //ssize_t len_line;
 	  char comm[512];
@@ -543,29 +555,39 @@ int main(int argc, char *argv[]) {
 	  line = read_from_stdin();
 
 	  if(line == NULL){
+
 		  wait(NULL);
 		  printf("terminated all request; closing connection\n");
 		  break;
+
 	  }
 
 	  pid = fork();
 
-	  if(pid != 0)
+	  if(pid != 0){
+
 		  continue;
 
-	  if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* create new socket   */
+    }
+
+	  if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) { /* create new socket   */
+
 		   perror("socket");
 		   exit(EXIT_FAILURE);
 
-      }
+    }
 
 	  if(!request_to_server(sockfd,&p,&servaddr, line)){
+
 		  printf("not available server\n");
 		  exit(EXIT_SUCCESS);
+
 	  }
 
 	  strcpy(comm, line);
 	  comm[strlen(comm)] = '\0';
+
+    printf("IL comando è : %s\n", comm);
 
 	  if(strncmp(comm, "put", 3) == 0){
 
@@ -581,6 +603,7 @@ int main(int argc, char *argv[]) {
 
 	  else if((strncmp(comm,"get",3) == 0)){
 
+      printf("SOno dentro get\n");
 		  get_file_client(sockfd,line,&servaddr, lossrate);
 		  break;
 
@@ -601,8 +624,9 @@ int main(int argc, char *argv[]) {
 	  }
 
 
-      }
-      printf("closing connection\n");
+    }
 
-      exit(EXIT_SUCCESS);
+    printf("closing connection\n");
+
+    exit(EXIT_SUCCESS);
 }

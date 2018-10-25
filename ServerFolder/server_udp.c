@@ -125,17 +125,21 @@ void write_queue(int queue_id, struct sockaddr_in addr, segmentPacket seg, char*
 	strcpy(msg.message, ret);
 	size_t size = sizeof(struct sockaddr_in) + sizeof(int);
 	msg.mtype = 1;
-	msg.client_seq = seg.seq_no;
+	msg.client_seq = seg.seq_no; 
 
 	int msgret = msgsnd(queue_id, &msg, size, 0);
 	if(msgret == -1){
 
-		error("Errore in msgsnd\n");
+		error("Errore in msgsnd \n");
 
 	}
 
-}
+	char bufferone[512];
 
+	inet_ntop(AF_INET, &msg.s, bufferone, 512);
+	printf("Stampo la struttura %s\n", bufferone);
+
+}
 /*Crea ed inizializza il socket*/
 void initialize_socket(int* sock_fd,struct sockaddr_in* s){
 
@@ -161,7 +165,6 @@ char* listen_request(int sockfd, segmentPacket* seg, struct sockaddr_in* addr,so
 
     int n = recvfrom(sockfd, stringa, sizeof(stringa), 0, (struct sockaddr *)&servaddr, &l);
          	
-    printf("Stampo. %s\n", seg->data);
 
     if(n < 0){
 
@@ -336,7 +339,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 	int tries = 0;
 
-
 	//getting file size
 	fseek(file, 0L, SEEK_END);
 	int size = ftell(file);
@@ -478,7 +480,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 		}else{
 
-
 			printf("Received terminal ack\n");
 			noTearDownAck = 0;
 
@@ -486,8 +487,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 		alarm(0);
 		tries = 0;
-
-
 
 	}
 
@@ -500,7 +499,6 @@ void send_file_server(char *filename, int sockfd, struct sockaddr_in servaddr){
 
 /*Riceve il file dal client tramite il comando put*/
 void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int loss_rate){
-
 
   FILE* file;
 
@@ -545,9 +543,7 @@ void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int l
       printf("Received out of sunc packet %d\n", dataPacket.seq_no);
       ack = createACKPacket(2, base);
 
-
     }
-
 
     if(dataPacket.type == 4 && seqNum == base){
 
@@ -564,21 +560,18 @@ void get_file_server(int sockfd, char* comm, struct sockaddr_in *servaddr, int l
         perror("Error while sending to socket\n");
         exit(1);
 
-
       }
 
     }else if(base == -1){
 
       printf("Received TearDown Packet\n");
       printf("Sendint Terminal ACK\n");
-      if(sendto(sockfd, &ack, sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr))<0){
+      if(sendto(sockfd, &ack, sizeof(ack), 0, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
 
         perror("Error while sending to socket\n");
         exit(1);
 
-
       }
-
 
     }
 
@@ -621,7 +614,7 @@ void manage_client(int sockfd, char* message, struct sockaddr_in* addr){
 		if(ret == 0){
 
 			printf("File does not exists, I can receive it\n");
-			//get_file_server(comm,sockfd,r,msg.s);
+			//get_file_server(message, sockfd, addr, msg.s);
 
 		}
 
@@ -650,7 +643,6 @@ void manage_client(int sockfd, char* message, struct sockaddr_in* addr){
 		send_file_server(message + 4,sockfd, servaddr);
 
 	}else if(strncmp(message, "list", 4) == 0){
-
 
 		printf("Sono in list\n");
 
@@ -681,6 +673,8 @@ void child_job(int queue_id, int shm_id, pid_t pid){
 
 	struct sockaddr_in addr;
 	int sockfd;
+	segmentPacket seg;
+	ACKPacket ackpkt;
 
 	struct msgbuf msg;
 	msg.mtype = 1;
@@ -713,6 +707,15 @@ void child_job(int queue_id, int shm_id, pid_t pid){
 		addr.sin_port = htons(0);
 
 		initialize_socket(&sockfd,&addr);				//every child process creates a new socket
+
+		seg.seq_no = -1;
+		ackpkt.ack_no = msg.client_seq;
+
+		if(sendto(sockfd, &ackpkt, sizeof(ackpkt), 0, (struct sockaddr *)&msg.s, sizeof(msg.s)) < 0){
+
+			error("Errore nella sendto\n");
+
+		}
 
 		manage_client(sockfd, msg.message, &addr);
 
@@ -753,14 +756,17 @@ int main(int argc, char **argv){
 
   prefork(queue_id, shm_id);
 
-  if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)		//create listen socket
-      error("errore in socket");
+  if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){		//create listen socket
+
+    error("errore in socket");
+
+  }
 
   addr.sin_family = AF_INET;
   addr.sin_port = htons(SERVPORT);
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  if(bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+  if(bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0){
 
      perror("errore in bind\n");
      exit(1);
